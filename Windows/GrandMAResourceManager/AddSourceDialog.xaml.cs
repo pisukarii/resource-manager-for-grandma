@@ -39,6 +39,18 @@ public partial class AddSourceDialog : Window
             .ToList();
         UsbListBox.ItemsSource = usbVolumes;
         UsbEmptyText.Visibility = usbVolumes.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+
+        // Set after InitializeComponent (not as an XAML IsChecked="True" literal) so the
+        // Checked handler below can safely reach LocalPanel/UsbPanel, which are declared
+        // later in the visual tree and wouldn't exist yet if this fired during XAML parsing.
+        LocalKindToggle.IsChecked = true;
+    }
+
+    private void OnKindToggleChanged(object sender, RoutedEventArgs e)
+    {
+        bool isLocal = LocalKindToggle.IsChecked == true;
+        LocalPanel.Visibility = isLocal ? Visibility.Visible : Visibility.Collapsed;
+        UsbPanel.Visibility = isLocal ? Visibility.Collapsed : Visibility.Visible;
     }
 
     private void OnLocalAddClick(object sender, RoutedEventArgs e)

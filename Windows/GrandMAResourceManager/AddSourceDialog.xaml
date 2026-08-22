@@ -1,85 +1,197 @@
 <Window x:Class="GrandMAResourceManager.AddSourceDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:models="clr-namespace:GrandMAResourceManager.Models"
         Title="Sourceを追加"
-        Width="480" Height="420" MinWidth="480" MinHeight="420"
+        Width="520" Height="480" MinWidth="520" MinHeight="480"
+        ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         Background="{StaticResource AppBackgroundBrush}"
         Foreground="{StaticResource AppForegroundBrush}"
         FontFamily="Segoe UI">
-    <Grid Margin="16">
+    <Window.Resources>
+        <Style x:Key="SegmentedButtonStyle" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{StaticResource SecondaryForegroundBrush}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Padding" Value="0,8" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Bd" CornerRadius="6" Background="Transparent" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                              TextElement.Foreground="{TemplateBinding Foreground}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource HoverBrush}" />
+                                <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SourceRowAddButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
+            <Setter Property="Padding" Value="6" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource HoverBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DetectedRowStyle" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+            <Setter Property="Padding" Value="8,6" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Sourceを追加" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,12" />
+        <StackPanel Grid.Row="0" Margin="0,0,0,16">
+            <TextBlock Text="Sourceを追加" FontSize="18" FontWeight="SemiBold" />
+            <TextBlock Text="grandMA3 / grandMA2 のファイルにすばやくアクセスするための Source を追加します。"
+                       Foreground="{StaticResource SecondaryForegroundBrush}" FontSize="12"
+                       TextWrapping="Wrap" Margin="0,4,0,0" />
+        </StackPanel>
 
-        <TabControl x:Name="KindTabControl" Grid.Row="1" Background="Transparent" BorderThickness="0">
-            <TabItem Header="ローカル (onPC)">
-                <StackPanel Margin="0,10">
-                    <TextBlock x:Name="LocalEmptyText" Text="onPC のインストールが見つかりませんでした。" Foreground="{StaticResource SecondaryForegroundBrush}" Margin="0,0,0,8" />
-                    <ListBox x:Name="LocalListBox" MaxHeight="160" Background="Transparent" BorderThickness="0" MouseDoubleClick="OnLocalItemDoubleClick">
+        <Border Grid.Row="1" Background="{StaticResource SidebarBackgroundBrush}" CornerRadius="8" Padding="3" Margin="0,0,0,16">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <RadioButton x:Name="LocalKindToggle" Grid.Column="0" GroupName="Kind"
+                             Style="{StaticResource SegmentedButtonStyle}" Checked="OnKindToggleChanged">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource IconTextStyle}" Text="{x:Static models:Glyphs.Laptop}" Margin="0,0,6,0" />
+                        <TextBlock Text="ローカル (onPC)" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="UsbKindToggle" Grid.Column="1" GroupName="Kind"
+                             Style="{StaticResource SegmentedButtonStyle}" Checked="OnKindToggleChanged">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource IconTextStyle}" Text="{x:Static models:Glyphs.ExternalDrive}" Margin="0,0,6,0" />
+                        <TextBlock Text="USBメモリ" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="2">
+            <StackPanel x:Name="LocalPanel">
+                <TextBlock x:Name="LocalEmptyText" Text="onPC のインストールが見つかりませんでした。"
+                           Foreground="{StaticResource SecondaryForegroundBrush}" FontSize="12"
+                           TextWrapping="Wrap" Margin="0,0,0,10" />
+                <Border Background="{StaticResource SidebarBackgroundBrush}" CornerRadius="8" Padding="4" Margin="0,0,0,14">
+                    <ListBox x:Name="LocalListBox" MaxHeight="170" Background="Transparent" BorderThickness="0"
+                             ItemContainerStyle="{StaticResource DetectedRowStyle}"
+                             MouseDoubleClick="OnLocalItemDoubleClick">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Grid Margin="4">
+                                <Grid Margin="4,2">
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding FamilyDisplay}" Foreground="{StaticResource AccentBrush}" Margin="0,0,8,0" />
-                                        <TextBlock Text="{Binding Name}" />
-                                    </StackPanel>
-                                    <Button Grid.Column="1" Content="追加" Click="OnLocalAddClick" Tag="{Binding}" />
+                                    <TextBlock Grid.Column="0" Style="{StaticResource IconTextStyle}"
+                                               Text="{x:Static models:Glyphs.Laptop}"
+                                               Foreground="{StaticResource SecondaryForegroundBrush}" Margin="0,0,10,0" />
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" />
+                                    <Border Grid.Column="2" Background="#33FFB03B" CornerRadius="8" Padding="7,2" Margin="0,0,8,0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding FamilyDisplay}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}" />
+                                    </Border>
+                                    <Button Grid.Column="3" Style="{StaticResource SourceRowAddButtonStyle}"
+                                            Click="OnLocalAddClick" Tag="{Binding}" ToolTip="Sourceとして追加" VerticalAlignment="Center">
+                                        <TextBlock Style="{StaticResource IconTextStyle}" Text="{x:Static models:Glyphs.Add}" />
+                                    </Button>
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <Separator Margin="0,10" />
-                    <TextBlock Text="自動検出されない場合は手動で選択してください:" FontSize="11" Foreground="{StaticResource SecondaryForegroundBrush}" Margin="0,0,0,6" />
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                        <RadioButton x:Name="LocalMa3Radio" Content="grandMA3" IsChecked="True" GroupName="LocalFamily" Margin="0,0,16,0" />
-                        <RadioButton x:Name="LocalMa2Radio" Content="grandMA2" GroupName="LocalFamily" />
-                    </StackPanel>
-                    <Button Content="フォルダを手動で選択..." HorizontalAlignment="Left" Click="OnPickLocalFolderClick" />
-                </StackPanel>
-            </TabItem>
+                </Border>
 
-            <TabItem Header="USBメモリ">
-                <StackPanel Margin="0,10">
-                    <TextBlock x:Name="UsbEmptyText" Text="grandMA3 / grandMA2 のUSBメモリが見つかりませんでした。" Foreground="{StaticResource SecondaryForegroundBrush}" Margin="0,0,0,8" />
-                    <ListBox x:Name="UsbListBox" MaxHeight="160" Background="Transparent" BorderThickness="0" MouseDoubleClick="OnUsbItemDoubleClick">
+                <Border Height="1" Background="{StaticResource BorderBrush2}" Margin="0,0,0,14" />
+
+                <TextBlock Text="自動検出されない場合は手動で選択してください:" FontSize="11"
+                           Foreground="{StaticResource SecondaryForegroundBrush}" Margin="0,0,0,8" />
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <RadioButton x:Name="LocalMa3Radio" Content="grandMA3" IsChecked="True" GroupName="LocalFamily" Margin="0,0,20,0" />
+                    <RadioButton x:Name="LocalMa2Radio" Content="grandMA2" GroupName="LocalFamily" />
+                </StackPanel>
+                <Button Content="フォルダを手動で選択..." HorizontalAlignment="Left" Click="OnPickLocalFolderClick" />
+            </StackPanel>
+
+            <StackPanel x:Name="UsbPanel" Visibility="Collapsed">
+                <TextBlock x:Name="UsbEmptyText" Text="grandMA3 / grandMA2 のUSBメモリが見つかりませんでした。"
+                           Foreground="{StaticResource SecondaryForegroundBrush}" FontSize="12"
+                           TextWrapping="Wrap" Margin="0,0,0,10" />
+                <Border Background="{StaticResource SidebarBackgroundBrush}" CornerRadius="8" Padding="4" Margin="0,0,0,14">
+                    <ListBox x:Name="UsbListBox" MaxHeight="170" Background="Transparent" BorderThickness="0"
+                             ItemContainerStyle="{StaticResource DetectedRowStyle}"
+                             MouseDoubleClick="OnUsbItemDoubleClick">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Grid Margin="4">
+                                <Grid Margin="4,2">
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding FamilyDisplay}" Foreground="{StaticResource AccentBrush}" Margin="0,0,8,0" />
-                                        <TextBlock Text="{Binding DriveRoot}" />
-                                    </StackPanel>
-                                    <Button Grid.Column="1" Content="追加" Click="OnUsbAddClick" Tag="{Binding}" />
+                                    <TextBlock Grid.Column="0" Style="{StaticResource IconTextStyle}"
+                                               Text="{x:Static models:Glyphs.ExternalDrive}"
+                                               Foreground="{StaticResource SecondaryForegroundBrush}" Margin="0,0,10,0" />
+                                    <TextBlock Grid.Column="1" Text="{Binding DriveRoot}" VerticalAlignment="Center" />
+                                    <Border Grid.Column="2" Background="#33FFB03B" CornerRadius="8" Padding="7,2" Margin="0,0,8,0" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding FamilyDisplay}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}" />
+                                    </Border>
+                                    <Button Grid.Column="3" Style="{StaticResource SourceRowAddButtonStyle}"
+                                            Click="OnUsbAddClick" Tag="{Binding}" ToolTip="Sourceとして追加" VerticalAlignment="Center">
+                                        <TextBlock Style="{StaticResource IconTextStyle}" Text="{x:Static models:Glyphs.Add}" />
+                                    </Button>
                                 </Grid>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <Separator Margin="0,10" />
-                    <TextBlock Text="自動検出されない場合は手動で選択してください:" FontSize="11" Foreground="{StaticResource SecondaryForegroundBrush}" Margin="0,0,0,6" />
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                        <RadioButton x:Name="UsbMa3Radio" Content="grandMA3" IsChecked="True" GroupName="UsbFamily" Margin="0,0,16,0" />
-                        <RadioButton x:Name="UsbMa2Radio" Content="grandMA2" GroupName="UsbFamily" />
-                    </StackPanel>
-                    <Button Content="ドライブを手動で選択..." HorizontalAlignment="Left" Click="OnPickUsbFolderClick" />
-                </StackPanel>
-            </TabItem>
-        </TabControl>
+                </Border>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
-            <Button Content="キャンセル" Click="OnCancelClick" Padding="12,4" IsCancel="True" />
+                <Border Height="1" Background="{StaticResource BorderBrush2}" Margin="0,0,0,14" />
+
+                <TextBlock Text="自動検出されない場合は手動で選択してください:" FontSize="11"
+                           Foreground="{StaticResource SecondaryForegroundBrush}" Margin="0,0,0,8" />
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <RadioButton x:Name="UsbMa3Radio" Content="grandMA3" IsChecked="True" GroupName="UsbFamily" Margin="0,0,20,0" />
+                    <RadioButton x:Name="UsbMa2Radio" Content="grandMA2" GroupName="UsbFamily" />
+                </StackPanel>
+                <Button Content="ドライブを手動で選択..." HorizontalAlignment="Left" Click="OnPickUsbFolderClick" />
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Content="キャンセル" Click="OnCancelClick" IsCancel="True" Padding="14,6" />
         </StackPanel>
     </Grid>
 </Window>

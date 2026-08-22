@@ -8,11 +8,6 @@
         Foreground="{StaticResource AppForegroundBrush}"
         FontFamily="Segoe UI">
     <Window.Resources>
-        <Style x:Key="IconTextStyle" TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-        </Style>
         <ContextMenu x:Key="SourceRowContextMenu">
             <MenuItem Header="名前を変更..." Click="OnRenameSourceClick" />
             <MenuItem Header="削除" Click="OnRemoveSourceClick" />
@@ -146,19 +141,9 @@
                              Background="Transparent" BorderThickness="0"
                              AllowDrop="True" Drop="OnSourceRowDrop" DragOver="OnSourceRowDragOver">
                         <ListBox.ItemContainerStyle>
-                            <Style TargetType="ListBoxItem">
+                            <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                                 <Setter Property="Padding" Value="10,6" />
                                 <Setter Property="ContextMenu" Value="{StaticResource SourceRowContextMenu}" />
-                                <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="{StaticResource HoverBrush}" />
-                                    </Trigger>
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter Property="Background" Value="{StaticResource AccentBrush}" />
-                                        <Setter Property="Foreground" Value="{StaticResource SelectedTextBrush}" />
-                                    </Trigger>
-                                </Style.Triggers>
                             </Style>
                         </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
@@ -183,19 +168,9 @@
                          SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
                          Background="{StaticResource SidebarBackgroundBrush}" BorderThickness="0">
                     <ListBox.ItemContainerStyle>
-                        <Style TargetType="ListBoxItem">
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                             <Setter Property="Padding" Value="10,5" />
                             <Setter Property="AllowDrop" Value="True" />
-                            <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="{StaticResource HoverBrush}" />
-                                </Trigger>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="{StaticResource AccentBrush}" />
-                                    <Setter Property="Foreground" Value="{StaticResource SelectedTextBrush}" />
-                                </Trigger>
-                            </Style.Triggers>
                         </Style>
                     </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
@@ -306,19 +281,8 @@
                                   PreviewMouseLeftButtonDown="OnFileListPreviewMouseDown"
                                   MouseMove="OnFileListMouseMove">
                             <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
+                                <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
                                     <Setter Property="ContextMenu" Value="{StaticResource FileRowContextMenu}" />
-                                    <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
-                                    <Setter Property="Padding" Value="6,4" />
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="{StaticResource HoverBrush}" />
-                                        </Trigger>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
-                                            <Setter Property="Foreground" Value="{StaticResource SelectedTextBrush}" />
-                                        </Trigger>
-                                    </Style.Triggers>
                                 </Style>
                             </ListView.ItemContainerStyle>
                             <ListView.View>
