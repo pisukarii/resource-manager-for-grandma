@@ -8,5 +8,116 @@
     <SolidColorBrush x:Key="SecondaryForegroundBrush" Color="#9A9AA0" />
     <SolidColorBrush x:Key="HoverBrush" Color="#2A2A30" />
     <SolidColorBrush x:Key="BorderBrush2" Color="#2E2E33" />
+    <SolidColorBrush x:Key="SelectedTextBrush" Color="#1A1A1E" />
+
+    <!--
+        Windows' default (Aero2) control styles set Foreground/Background from
+        SystemColors as a Style setter, which takes precedence over a value
+        merely inherited from Window.Foreground. Without these app-wide
+        implicit styles, every stock WPF control (Button, ListBox/ListView
+        items, ComboBox, TabItem, RadioButton, ...) renders with the OS's own
+        (often dark-on-dark for this app's palette) colors instead of ours.
+    -->
+
+    <Style TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
+        <Setter Property="Background" Value="{StaticResource HoverBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush2}" />
+        <Setter Property="Padding" Value="10,5" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource BorderBrush2}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource SelectedTextBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Foreground" Value="{StaticResource SecondaryForegroundBrush}" />
+                <Setter Property="Opacity" Value="0.6" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="TextBox">
+        <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
+        <Setter Property="Background" Value="{StaticResource SidebarBackgroundBrush}" />
+        <Setter Property="CaretBrush" Value="{StaticResource AppForegroundBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush2}" />
+        <Setter Property="Padding" Value="4" />
+    </Style>
+
+    <Style TargetType="ComboBox">
+        <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
+        <Setter Property="Background" Value="{StaticResource SidebarBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush2}" />
+    </Style>
+    <Style TargetType="ComboBoxItem">
+        <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
+        <Setter Property="Background" Value="{StaticResource SidebarBackgroundBrush}" />
+        <Style.Triggers>
+            <Trigger Property="IsHighlighted" Value="True">
+                <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource SelectedTextBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="ListBox">
+        <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
+    </Style>
+    <Style TargetType="ListBoxItem">
+        <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
+        <Setter Property="Padding" Value="6,4" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource HoverBrush}" />
+            </Trigger>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource SelectedTextBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="ListView">
+        <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
+    </Style>
+    <Style TargetType="ListViewItem">
+        <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
+        <Setter Property="Padding" Value="6,4" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource HoverBrush}" />
+            </Trigger>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+                <Setter Property="Foreground" Value="{StaticResource SelectedTextBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style TargetType="GridViewColumnHeader">
+        <Setter Property="Foreground" Value="{StaticResource SecondaryForegroundBrush}" />
+        <Setter Property="Background" Value="{StaticResource SidebarBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush2}" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="Padding" Value="8,6" />
+    </Style>
+
+    <Style TargetType="TabItem">
+        <Setter Property="Foreground" Value="{StaticResource SecondaryForegroundBrush}" />
+        <Setter Property="Background" Value="{StaticResource SidebarBackgroundBrush}" />
+        <Setter Property="Padding" Value="12,6" />
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
+                <Setter Property="Background" Value="{StaticResource HoverBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="RadioButton">
+        <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
+    </Style>
 
 </ResourceDictionary>

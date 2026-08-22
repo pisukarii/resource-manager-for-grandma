@@ -149,6 +149,16 @@
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="Padding" Value="10,6" />
                                 <Setter Property="ContextMenu" Value="{StaticResource SourceRowContextMenu}" />
+                                <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource HoverBrush}" />
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+                                        <Setter Property="Foreground" Value="{StaticResource SelectedTextBrush}" />
+                                    </Trigger>
+                                </Style.Triggers>
                             </Style>
                         </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
@@ -176,6 +186,16 @@
                         <Style TargetType="ListBoxItem">
                             <Setter Property="Padding" Value="10,5" />
                             <Setter Property="AllowDrop" Value="True" />
+                            <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource HoverBrush}" />
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+                                    <Setter Property="Foreground" Value="{StaticResource SelectedTextBrush}" />
+                                </Trigger>
+                            </Style.Triggers>
                         </Style>
                     </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
@@ -288,6 +308,17 @@
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="ContextMenu" Value="{StaticResource FileRowContextMenu}" />
+                                    <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
+                                    <Setter Property="Padding" Value="6,4" />
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource HoverBrush}" />
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+                                            <Setter Property="Foreground" Value="{StaticResource SelectedTextBrush}" />
+                                        </Trigger>
+                                    </Style.Triggers>
                                 </Style>
                             </ListView.ItemContainerStyle>
                             <ListView.View>
