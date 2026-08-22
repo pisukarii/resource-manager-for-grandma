@@ -1,4 +1,4 @@
-# grandMA Resource Manager (macOS)
+# Resource Manager for grandMA (macOS)
 
 grandMA3 / grandMA2 のファイルに素早くアクセスするための Mac アプリです。ローカル onPC・USBメモリ・実機コンソール(SFTP)を横断して Shows / Macros / Presets などのフォルダに一発でジャンプし、ドラッグ&ドロップでインポート/エクスポートできます。
 
@@ -6,13 +6,13 @@ grandMA3 / grandMA2 のファイルに素早くアクセスするための Mac �
 
 ## ダウンロードしてすぐ使う
 
-Xcode不要です。[Releases](../../releases) から最新の `GrandMAResourceManager-macOS.zip` をダウンロードして展開し、`grandMA Resource Manager.app` を `/Applications` に入れて起動してください。
+Xcode不要です。[Releases](../../releases) から最新の `GrandMAResourceManager-macOS.zip` をダウンロードして展開し、`Resource Manager for grandMA.app` を `/Applications` に入れて起動してください。
 
 未署名アプリのため、初回起動時にmacOSの警告でブロックされます。以下の手順で開いてください。
 
-1. まず `grandMA Resource Manager.app` を**右クリック(またはControl+クリック)→「開く」**を試す
+1. まず `Resource Manager for grandMA.app` を**右クリック(またはControl+クリック)→「開く」**を試す
 2. 「開く」ボタンが出るダイアログならそのまま「開く」で起動完了
-3. それでも「破損している」「開けません」としか出ず「開く」の選択肢が無い場合は、**「システム設定」→「プライバシーとセキュリティ」**を開き、一番下までスクロールすると「"grandMA Resource Manager" はブロックされました」といった表示があるので、その横の**「このまま開く」**をクリック → パスワードやTouch IDで確認
+3. それでも「破損している」「開けません」としか出ず「開く」の選択肢が無い場合は、**「システム設定」→「プライバシーとセキュリティ」**を開き、一番下までスクロールすると「"Resource Manager for grandMA" はブロックされました」といった表示があるので、その横の**「このまま開く」**をクリック → パスワードやTouch IDで確認
 4. 再度アプリを起動すると、今度は普通に開けます
 
 一度許可すれば、2回目以降は警告なしで起動します。

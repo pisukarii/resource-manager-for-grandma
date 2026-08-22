@@ -11,7 +11,7 @@ struct FirstRunWelcomeView: View {
                 .font(.system(size: 48))
                 .foregroundStyle(.secondary)
 
-            Text("grandMA Resource Manager へようこそ")
+            Text("Resource Manager for grandMA へようこそ")
                 .font(.title2.bold())
 
             Text("grandMA3 のファイルにすばやくアクセスするための Source を追加してください。")
