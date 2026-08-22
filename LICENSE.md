@@ -1,6 +1,6 @@
 # License
 
-Copyright (c) 2026 pisukarii. All rights reserved.
+Copyright (c) 2026 pisukari. All rights reserved.
 
 This repository's source code and the built application distributed via
 [Releases](../../releases) are made available for **viewing and personal /
