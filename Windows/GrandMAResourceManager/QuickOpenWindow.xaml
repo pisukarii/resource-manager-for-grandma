@@ -1,0 +1,44 @@
+<Window x:Class="GrandMAResourceManager.QuickOpenWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Quick Open"
+        Width="520" Height="380"
+        WindowStyle="ToolWindow"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource AppBackgroundBrush}"
+        Foreground="{StaticResource AppForegroundBrush}"
+        FontFamily="Segoe UI">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBox x:Name="SearchBox" Grid.Row="0" FontSize="16" Padding="6"
+                 Background="Transparent" Foreground="{StaticResource AppForegroundBrush}"
+                 BorderBrush="{StaticResource BorderBrush2}"
+                 TextChanged="OnSearchTextChanged" />
+
+        <TextBlock x:Name="StatusText" Grid.Row="1" Margin="0,6" FontSize="11"
+                   Foreground="{StaticResource SecondaryForegroundBrush}" />
+
+        <ListBox x:Name="ResultsListBox" Grid.Row="2" Margin="0,6,0,0"
+                 Background="Transparent" BorderThickness="0"
+                 MouseDoubleClick="OnResultDoubleClick"
+                 KeyDown="OnResultsKeyDown">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="4">
+                        <TextBlock Text="{Binding Entry.Name}" />
+                        <TextBlock FontSize="11" Foreground="{StaticResource SecondaryForegroundBrush}">
+                            <Run Text="{Binding SourceName, Mode=OneWay}" />
+                            <Run Text=" / " />
+                            <Run Text="{Binding Category.DisplayName, Mode=OneWay}" />
+                        </TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>
