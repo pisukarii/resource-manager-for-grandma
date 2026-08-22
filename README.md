@@ -38,3 +38,7 @@ xcodegen generate
 ## 動作要件
 
 - macOS 14 (Sonoma) 以降
+
+## ライセンス
+
+閲覧・ダウンロードして使うのは自由ですが、改変や再配布は許可していません。詳細は [LICENSE.md](LICENSE.md) を参照してください。
