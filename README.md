@@ -10,13 +10,31 @@ grandMA3 / grandMA2 のファイルに素早くアクセスするための Mac /
 
 - **grandMA3 / grandMA2 のUSBメモリを挿すだけで自動検出**、ワンクリックでSourceとして追加
 - ローカル onPC(macOS: `~/MALightingTechnology`、Windows: `C:\ProgramData\MALightingTechnology` など)、USBメモリを横断してファイル管理
-- macOS版は実機コンソール(SFTP)にも対応(※未検証、上記Note参照)
 - Shows / Macros / Sequences / Presets など grandMA3 のフォルダ構成をワンクリックでナビゲート
-- grandMA2 にも対応(ローカル・USBとも)
-- ドラッグ&ドロップでのインポート/エクスポート(Source間も含む。macOS版はSFTP経由も)
-- ファイルのリネーム・削除(確認ダイアログ、ゴミ箱送り)
+- ドラッグ&ドロップでのインポート/エクスポート
+- ファイルのリネーム・削除(確認ダイアログ、ゴミ箱/リサイクル箱送り)
 - クイックオープン検索(全Source横断)
 - フィクスチャライブラリのメーカー名でのフィルタ
+
+## macOS / Windows 対応表
+
+| 機能 | macOS | Windows |
+|---|:---:|:---:|
+| ローカル onPC (grandMA3) | ✅ | ✅ |
+| ローカル onPC (grandMA2) | ❌ | ✅ |
+| USBメモリ (grandMA3 / grandMA2 自動検出) | ✅ | ✅ |
+| 実機コンソール接続 (SFTP) | ✅ ※未検証 | ❌ |
+| 他のMac/PC(onPC)へのSSH接続 | ✅ | ❌ |
+| ドラッグ&ドロップ インポート/エクスポート | ✅ | ✅ |
+| 別Source間のドラッグ移動 | ✅ (SFTP含む) | ✅ (ローカル/USB間) |
+| リネーム・削除 | ✅ | ✅ |
+| 複数選択・一括削除 | ✅ (選択モード切替) | ✅ (Ctrl/Shift+クリック) |
+| クイックオープン検索 | ✅ (⌘K) | ✅ (Ctrl+K) |
+| メーカー名フィルタ | ✅ | ✅ |
+| フォルダ種別アイコン(lib_*等) | ✅ | 未対応 |
+| MA Net(同一サブネット)判定表示 | ✅ | - (SFTP非対応のため) |
+
+※ 実機コンソールへのSFTP接続はmacOS版のみ実装済みですが、実機での動作検証がまだできていません(上記Note参照)。ローカル onPC / USBメモリの利用はどちらのプラットフォームでも動作確認済みです。
 
 ## ダウンロードしてすぐ使う
 

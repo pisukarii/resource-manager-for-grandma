@@ -113,6 +113,31 @@
     border-radius: 4px;
     font-size: 0.9em;
   }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  th, td {
+    text-align: left;
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    color: var(--fg-secondary);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  td.center, th.center { text-align: center; }
+  .yes { color: #7ee08a; font-weight: 600; }
+  .no { color: #6a6a70; }
+  table + p.footnote {
+    color: var(--fg-secondary);
+    font-size: 0.8rem;
+    margin-top: 10px;
+  }
 </style>
 </head>
 <body>
@@ -145,9 +170,28 @@
   </section>
 
   <section>
-    <div class="callout">
-      <strong>Note:</strong> 実機コンソールへのSFTP接続機能(macOS版のみ)は実装済みですが、実機での動作検証がまだできていません。ローカル onPC / USBメモリでの利用はどちらのプラットフォームでも動作確認済みです。
-    </div>
+    <h2>macOS / Windows 対応表</h2>
+    <table>
+      <thead>
+        <tr><th>機能</th><th class="center">macOS</th><th class="center">Windows</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>ローカル onPC (grandMA3)</td><td class="center yes">✓</td><td class="center yes">✓</td></tr>
+        <tr><td>ローカル onPC (grandMA2)</td><td class="center no">—</td><td class="center yes">✓</td></tr>
+        <tr><td>USBメモリ (grandMA3 / grandMA2 自動検出)</td><td class="center yes">✓</td><td class="center yes">✓</td></tr>
+        <tr><td>実機コンソール接続 (SFTP)</td><td class="center yes">✓ ※未検証</td><td class="center no">—</td></tr>
+        <tr><td>他のMac/PC(onPC)へのSSH接続</td><td class="center yes">✓</td><td class="center no">—</td></tr>
+        <tr><td>ドラッグ&ドロップ インポート/エクスポート</td><td class="center yes">✓</td><td class="center yes">✓</td></tr>
+        <tr><td>別Source間のドラッグ移動</td><td class="center yes">✓ (SFTP含む)</td><td class="center yes">✓ (ローカル/USB間)</td></tr>
+        <tr><td>リネーム・削除</td><td class="center yes">✓</td><td class="center yes">✓</td></tr>
+        <tr><td>複数選択・一括削除</td><td class="center yes">✓</td><td class="center yes">✓</td></tr>
+        <tr><td>クイックオープン検索</td><td class="center yes">✓ (⌘K)</td><td class="center yes">✓ (Ctrl+K)</td></tr>
+        <tr><td>メーカー名フィルタ</td><td class="center yes">✓</td><td class="center yes">✓</td></tr>
+        <tr><td>フォルダ種別アイコン(lib_*等)</td><td class="center yes">✓</td><td class="center no">—</td></tr>
+        <tr><td>MA Net(同一サブネット)判定表示</td><td class="center yes">✓</td><td class="center no">—</td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">※ 実機コンソールへのSFTP接続はmacOS版のみ実装済みですが、実機での動作検証がまだできていません。ローカル onPC / USBメモリの利用はどちらのプラットフォームでも動作確認済みです。</p>
   </section>
 
   <footer>
