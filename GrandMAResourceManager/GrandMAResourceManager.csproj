@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>GrandMAResourceManager</RootNamespace>
+    <AssemblyName>GrandMAResourceManager</AssemblyName>
+    <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
+    <Version>0.1.0</Version>
+    <Product>Resource Manager for grandMA</Product>
+    <AssemblyTitle>Resource Manager for grandMA</AssemblyTitle>
+    <!-- Lets `dotnet build`/`dotnet restore` typecheck on non-Windows hosts
+         (the WindowsDesktop reference assemblies are plain NuGet packages);
+         it does not make the app runnable here. -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="System.Management" Version="8.0.0" />
+  </ItemGroup>
+
+</Project>
