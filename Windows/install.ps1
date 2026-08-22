@@ -16,5 +16,5 @@ dotnet publish -c Release -r win-x64 --self-contained true `
     -o "$PSScriptRoot\publish"
 
 Write-Host ""
-Write-Host "Built: $PSScriptRoot\publish\GrandMAResourceManager.exe"
+Write-Host "Built: $PSScriptRoot\publish\ResourceManagerForGrandMA.exe"
 Write-Host "Copy that .exe anywhere and run it directly - no installer needed."

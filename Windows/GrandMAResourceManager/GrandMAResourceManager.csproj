@@ -7,7 +7,7 @@
     <UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>GrandMAResourceManager</RootNamespace>
-    <AssemblyName>GrandMAResourceManager</AssemblyName>
+    <AssemblyName>ResourceManagerForGrandMA</AssemblyName>
     <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
     <Version>0.1.0</Version>
     <Product>Resource Manager for grandMA</Product>

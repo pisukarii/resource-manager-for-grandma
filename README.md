@@ -42,7 +42,7 @@ grandMA3 / grandMA2 のファイルに素早くアクセスするための Mac /
 
 ### macOS
 
-1. `GrandMAResourceManager-macOS.zip` をダウンロードして展開
+1. `ResourceManagerForGrandMA-macOS.zip` をダウンロードして展開
 2. `Resource Manager for grandMA.app` を `/Applications` に入れて起動
 
 未署名アプリのため、初回起動時にmacOSの警告でブロックされます。
@@ -58,8 +58,8 @@ grandMA3 / grandMA2 のファイルに素早くアクセスするための Mac /
 
 ### Windows
 
-1. `GrandMAResourceManager-win-x64.zip`(または `.exe`)をダウンロード
-2. 展開して `GrandMAResourceManager.exe` をダブルクリック(.NETランタイムのインストール不要、単体で動作します)
+1. `ResourceManagerForGrandMA-win-x64.zip`(または `.exe`)をダウンロード
+2. 展開して `ResourceManagerForGrandMA.exe` をダブルクリック(.NETランタイムのインストール不要、単体で動作します)
 
 未署名アプリのため、初回起動時にWindows SmartScreenの警告が出ます。「詳細情報」→「実行」を選べば起動できます。
 
