@@ -2,6 +2,8 @@
 
 grandMA3 / grandMA2 のファイルに素早くアクセスするための Mac アプリです。ローカル onPC・USBメモリ・実機コンソール(SFTP)を横断して Shows / Macros / Presets などのフォルダに一発でジャンプし、ドラッグ&ドロップでインポート/エクスポートできます。
 
+**grandMA3 / grandMA2 のデータが入ったUSBメモリを挿すだけで自動検出**され、「Sourceとして追加しますか？」とバナーで聞かれるので、毎回手動でボリュームを探す必要がありません。
+
 ## ダウンロードしてすぐ使う
 
 Xcode不要です。[Releases](../../releases) から最新の `GrandMAResourceManager-macOS.zip` をダウンロードして展開し、`grandMA Resource Manager.app` を `/Applications` に入れて起動してください。
@@ -17,6 +19,7 @@ Xcode不要です。[Releases](../../releases) から最新の `GrandMAResourceM
 
 ## 主な機能
 
+- **grandMA3 / grandMA2 のUSBメモリを挿すだけで自動検出**、ワンクリックでSourceとして追加
 - ローカル onPC(`~/MALightingTechnology`)、USBメモリ、実機コンソール(SFTP)の3系統を横断してファイル管理
 - Shows / Macros / Sequences / Presets など grandMA3 のフォルダ構成をワンクリックでナビゲート
 - grandMA2 (USB) にも対応
