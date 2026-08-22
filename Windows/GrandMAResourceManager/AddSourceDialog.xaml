@@ -18,7 +18,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
-                        <Border x:Name="Bd" CornerRadius="6" Background="Transparent" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="Bd" CornerRadius="8" Background="Transparent" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
                                               TextElement.Foreground="{TemplateBinding Foreground}" />
                         </Border>
@@ -42,7 +42,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
@@ -75,7 +75,7 @@
                        TextWrapping="Wrap" Margin="0,4,0,0" />
         </StackPanel>
 
-        <Border Grid.Row="1" Background="{StaticResource SidebarBackgroundBrush}" CornerRadius="8" Padding="3" Margin="0,0,0,16">
+        <Border Grid.Row="1" Background="{StaticResource SidebarBackgroundBrush}" CornerRadius="10" Padding="3" Margin="0,0,0,16">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -103,7 +103,7 @@
                 <TextBlock x:Name="LocalEmptyText" Text="onPC のインストールが見つかりませんでした。"
                            Foreground="{StaticResource SecondaryForegroundBrush}" FontSize="12"
                            TextWrapping="Wrap" Margin="0,0,0,10" />
-                <Border Background="{StaticResource SidebarBackgroundBrush}" CornerRadius="8" Padding="4" Margin="0,0,0,14">
+                <Border Background="{StaticResource SidebarBackgroundBrush}" CornerRadius="10" Padding="4" Margin="0,0,0,14">
                     <ListBox x:Name="LocalListBox" MaxHeight="170" Background="Transparent" BorderThickness="0"
                              ItemContainerStyle="{StaticResource DetectedRowStyle}"
                              MouseDoubleClick="OnLocalItemDoubleClick">
@@ -148,7 +148,7 @@
                 <TextBlock x:Name="UsbEmptyText" Text="grandMA3 / grandMA2 のUSBメモリが見つかりませんでした。"
                            Foreground="{StaticResource SecondaryForegroundBrush}" FontSize="12"
                            TextWrapping="Wrap" Margin="0,0,0,10" />
-                <Border Background="{StaticResource SidebarBackgroundBrush}" CornerRadius="8" Padding="4" Margin="0,0,0,14">
+                <Border Background="{StaticResource SidebarBackgroundBrush}" CornerRadius="10" Padding="4" Margin="0,0,0,14">
                     <ListBox x:Name="UsbListBox" MaxHeight="170" Background="Transparent" BorderThickness="0"
                              ItemContainerStyle="{StaticResource DetectedRowStyle}"
                              MouseDoubleClick="OnUsbItemDoubleClick">
