@@ -4,6 +4,8 @@ grandMA3 / grandMA2 のファイルに素早くアクセスするための Mac �
 
 **grandMA3 / grandMA2 のデータが入ったUSBメモリを挿すだけで自動検出**され、「Sourceとして追加しますか？」とバナーで聞かれるので、毎回手動でボリュームを探す必要がありません。
 
+> **Note:** 実機コンソールへのSFTP接続機能は実装済みですが、実機での動作検証がまだできていません。確認でき次第このREADMEで報告します。ローカル onPC / USBメモリでの利用は動作確認済みです。
+
 ## ダウンロードしてすぐ使う
 
 Xcode不要です。[Releases](../../releases) から最新の `GrandMAResourceManager-macOS.zip` をダウンロードして展開し、`Resource Manager for grandMA.app` を `/Applications` に入れて起動してください。
