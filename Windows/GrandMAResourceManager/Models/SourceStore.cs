@@ -43,6 +43,30 @@ public sealed partial class SourceStore : ObservableObject
         Save();
     }
 
+    /// <summary>
+    /// Applies edited connection settings (host/port/username/base path/...)
+    /// to an existing SFTP Source and re-instantiates its live backend so
+    /// the new settings take effect immediately, rather than only on next
+    /// launch. <paramref name="updated"/> carries the new field values under
+    /// the same Id; the existing shared SourceConfig reference is mutated in
+    /// place so the sidebar binding doesn't need to change identity.
+    /// </summary>
+    public void UpdateSource(SourceConfig updated)
+    {
+        var existing = Configs.FirstOrDefault(c => c.Id == updated.Id);
+        if (existing is null) return;
+        existing.Name = updated.Name;
+        existing.Host = updated.Host;
+        existing.Port = updated.Port;
+        existing.Username = updated.Username;
+        existing.ConnectionTarget = updated.ConnectionTarget;
+        existing.BasePathOverride = updated.BasePathOverride;
+        existing.Family = updated.Family;
+        _liveSources.Remove(existing.Id);
+        Instantiate(existing);
+        Save();
+    }
+
     public void RemoveSource(Guid id)
     {
         var config = Configs.FirstOrDefault(c => c.Id == id);
@@ -53,6 +77,22 @@ public sealed partial class SourceStore : ObservableObject
 
     private void Instantiate(SourceConfig config)
     {
+        if (config.Kind == SourceKind.Sftp)
+        {
+            var sftp = new Sources.SftpFileSource(config);
+            _liveSources[config.Id] = sftp;
+            // Best-effort: connect proactively so the sidebar's status dot
+            // reflects real connectivity even before the user selects this
+            // Source. Failure just leaves the dot red (via ConnectionState),
+            // there's nothing else useful to do with the exception here.
+            _ = Task.Run(async () =>
+            {
+                try { await sftp.ConnectAsync(); }
+                catch (Sources.FileSourceException) { /* recorded via ConnectionState */ }
+            });
+            return;
+        }
+
         if (config.Path is null) return;
 
         switch (config.Kind)

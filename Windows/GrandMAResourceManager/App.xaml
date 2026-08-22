@@ -18,6 +18,7 @@
             <conv:FileSizeConverter x:Key="FileSize" />
             <conv:FileEntryGlyphConverter x:Key="FileEntryGlyph" />
             <conv:ConsoleFamilyDisplayConverter x:Key="ConsoleFamilyDisplay" />
+            <conv:SftpConnectedBrushConverter x:Key="SftpConnectedBrush" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -1,0 +1,155 @@
+<Window x:Class="GrandMAResourceManager.SftpConnectionDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SFTP接続"
+        Width="520" Height="700" MinWidth="520" MinHeight="700"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource AppBackgroundBrush}"
+        Foreground="{StaticResource AppForegroundBrush}"
+        FontFamily="Segoe UI">
+    <Window.Resources>
+        <Style x:Key="FieldLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+        </Style>
+        <Style x:Key="LinkButtonStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+        <Style x:Key="StepNumberStyle" TargetType="Border">
+            <Setter Property="Width" Value="16" />
+            <Setter Property="Height" Value="16" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Background" Value="#40FFB03B" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="SFTP接続" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,14" />
+
+                <Border Background="#14FFB03B" CornerRadius="8" Padding="12" Margin="0,0,0,14">
+                    <StackPanel>
+                        <TextBlock Text="接続手順" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,8" />
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                            <Border Style="{StaticResource StepNumberStyle}" VerticalAlignment="Top" Margin="0,1,8,0">
+                                <TextBlock Text="1" FontSize="10" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <TextBlock Text="コンソール(またはSSH/SFTPを有効化したonPC機)のIPアドレスを確認" FontSize="11"
+                                       Foreground="{StaticResource SecondaryForegroundBrush}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                            <Border Style="{StaticResource StepNumberStyle}" VerticalAlignment="Top" Margin="0,1,8,0">
+                                <TextBlock Text="2" FontSize="10" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <TextBlock Text="下にホスト・ユーザー名・パスワードを入力" FontSize="11"
+                                       Foreground="{StaticResource SecondaryForegroundBrush}" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Border Style="{StaticResource StepNumberStyle}" VerticalAlignment="Top" Margin="0,1,8,0">
+                                <TextBlock Text="3" FontSize="10" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <TextBlock Text="「接続をテスト」で疎通確認 → 成功したら「追加」" FontSize="11"
+                                       Foreground="{StaticResource SecondaryForegroundBrush}" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Text="接続先" Style="{StaticResource FieldLabelStyle}" />
+                <Border Background="{StaticResource SidebarBackgroundBrush}" CornerRadius="10" Padding="3" Margin="0,0,0,4">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <RadioButton x:Name="ConsoleTargetToggle" Grid.Column="0" GroupName="Target"
+                                     Style="{StaticResource SegmentedButtonStyle}" Content="実機コンソール"
+                                     Checked="OnTargetToggleChanged" />
+                        <RadioButton x:Name="OtherOnPcTargetToggle" Grid.Column="1" GroupName="Target"
+                                     Style="{StaticResource SegmentedButtonStyle}" Content="他のonPC (SSH)"
+                                     Checked="OnTargetToggleChanged" />
+                    </Grid>
+                </Border>
+                <TextBlock Text="実機コンソールとonPC機ではログイン情報が別物です。混ざらないよう、まずどちらに繋ぐか選んでください。"
+                           FontSize="11" Foreground="{StaticResource SecondaryForegroundBrush}" TextWrapping="Wrap" Margin="0,0,0,4" />
+                <Button x:Name="SetupHelpButton" Content="初回設定方法" Style="{StaticResource LinkButtonStyle}"
+                        Click="OnShowSetupInstructionsClick" Margin="0,0,0,10" />
+
+                <TextBlock Text="表示名" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox x:Name="NameBox" Margin="0,0,0,10" />
+
+                <TextBlock x:Name="HostHintText" Text="ホスト" Style="{StaticResource FieldLabelStyle}" />
+                <TextBox x:Name="HostBox" Margin="0,0,0,10" />
+
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="10" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="ポート" Style="{StaticResource FieldLabelStyle}" />
+                        <TextBox x:Name="PortBox" Text="22" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2">
+                        <TextBlock x:Name="UsernameHintText" Text="ユーザー名" Style="{StaticResource FieldLabelStyle}" />
+                        <TextBox x:Name="UsernameBox" />
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock Text="パスワード" Style="{StaticResource FieldLabelStyle}" />
+                <PasswordBox x:Name="PasswordBox" Margin="0,0,0,10" Padding="8,6" />
+
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                    <TextBlock Text="ベースパス" Style="{StaticResource FieldLabelStyle}" Margin="0,0,6,4" />
+                    <Button Content="?" Style="{StaticResource LinkButtonStyle}" Click="OnToggleBasePathHelpClick" Padding="2,0" />
+                </StackPanel>
+                <TextBox x:Name="BasePathBox" Margin="0,0,0,4" />
+                <TextBlock x:Name="BasePathHelpText" Visibility="Collapsed" FontSize="11"
+                           Foreground="{StaticResource SecondaryForegroundBrush}" TextWrapping="Wrap"
+                           Background="{StaticResource SidebarBackgroundBrush}" Padding="8" Margin="0,0,0,8" />
+
+                <StackPanel x:Name="DiscoveryPanel" Visibility="Collapsed" Margin="0,0,0,10">
+                    <Button x:Name="DiscoverButton" Content="ベースパスを自動検出" Style="{StaticResource LinkButtonStyle}"
+                            Click="OnDiscoverClick" Margin="0,0,0,4" />
+                    <TextBlock x:Name="DiscoveryStatusText" FontSize="11" Visibility="Collapsed"
+                               Foreground="{StaticResource SecondaryForegroundBrush}" TextWrapping="Wrap" Margin="0,0,0,4" />
+                    <ItemsControl x:Name="DiscoveryResultsList" Visibility="Collapsed">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding}" Style="{StaticResource LinkButtonStyle}" FontSize="11"
+                                        Click="OnDiscoveredPathClick" Tag="{Binding}" Margin="0,0,0,2" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <Border x:Name="ResultBanner" Visibility="Collapsed" CornerRadius="6" Padding="8" Margin="0,0,0,10">
+                    <TextBlock x:Name="ResultText" FontSize="12" TextWrapping="Wrap" />
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="1" Margin="0,14,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="TestButton" Grid.Column="0" Content="接続をテスト" Click="OnTestConnectionClick" Padding="12,6" />
+            <Button Grid.Column="2" Content="キャンセル" IsCancel="True" Click="OnCancelClick" Padding="14,6" Margin="0,0,8,0" />
+            <Button x:Name="SubmitButton" Grid.Column="3" Content="追加" Click="OnSubmitClick" Padding="14,6" />
+        </Grid>
+    </Grid>
+</Window>

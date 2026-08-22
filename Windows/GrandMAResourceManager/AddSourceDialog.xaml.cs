@@ -48,9 +48,20 @@ public partial class AddSourceDialog : Window
 
     private void OnKindToggleChanged(object sender, RoutedEventArgs e)
     {
-        bool isLocal = LocalKindToggle.IsChecked == true;
-        LocalPanel.Visibility = isLocal ? Visibility.Visible : Visibility.Collapsed;
-        UsbPanel.Visibility = isLocal ? Visibility.Collapsed : Visibility.Visible;
+        LocalPanel.Visibility = LocalKindToggle.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
+        UsbPanel.Visibility = UsbKindToggle.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
+        SftpPanel.Visibility = SftpKindToggle.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void OnOpenSftpDialogClick(object sender, RoutedEventArgs e)
+    {
+        var dialog = new SftpConnectionDialog(existingConfig: null) { Owner = this };
+        if (dialog.ShowDialog() == true && dialog.ResultConfig is { } config)
+        {
+            CreatedConfig = config;
+            DialogResult = true;
+            Close();
+        }
     }
 
     private void OnLocalAddClick(object sender, RoutedEventArgs e)

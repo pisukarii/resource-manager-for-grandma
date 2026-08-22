@@ -10,29 +10,6 @@
         Foreground="{StaticResource AppForegroundBrush}"
         FontFamily="Segoe UI">
     <Window.Resources>
-        <Style x:Key="SegmentedButtonStyle" TargetType="RadioButton">
-            <Setter Property="Foreground" Value="{StaticResource SecondaryForegroundBrush}" />
-            <Setter Property="FontSize" Value="12" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Padding" Value="0,8" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="RadioButton">
-                        <Border x:Name="Bd" CornerRadius="8" Background="Transparent" Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
-                                              TextElement.Foreground="{TemplateBinding Foreground}" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource HoverBrush}" />
-                                <Setter Property="Foreground" Value="{StaticResource AppForegroundBrush}" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <Style x:Key="SourceRowAddButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
@@ -80,6 +57,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <RadioButton x:Name="LocalKindToggle" Grid.Column="0" GroupName="Kind"
                              Style="{StaticResource SegmentedButtonStyle}" Checked="OnKindToggleChanged">
@@ -93,6 +71,13 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Style="{StaticResource IconTextStyle}" Text="{x:Static models:Glyphs.ExternalDrive}" Margin="0,0,6,0" />
                         <TextBlock Text="USBメモリ" VerticalAlignment="Center" />
+                    </StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="SftpKindToggle" Grid.Column="2" GroupName="Kind"
+                             Style="{StaticResource SegmentedButtonStyle}" Checked="OnKindToggleChanged">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource IconTextStyle}" Text="{x:Static models:Glyphs.Network}" Margin="0,0,6,0" />
+                        <TextBlock Text="コンソール (SFTP)" VerticalAlignment="Center" />
                     </StackPanel>
                 </RadioButton>
             </Grid>
@@ -187,6 +172,13 @@
                     <RadioButton x:Name="UsbMa2Radio" Content="grandMA2" GroupName="UsbFamily" />
                 </StackPanel>
                 <Button Content="ドライブを手動で選択..." HorizontalAlignment="Left" Click="OnPickUsbFolderClick" />
+            </StackPanel>
+
+            <StackPanel x:Name="SftpPanel" Visibility="Collapsed">
+                <TextBlock Text="実機コンソール、または SSH/SFTP を有効化した別のPC・Mac に接続します。"
+                           Foreground="{StaticResource SecondaryForegroundBrush}" FontSize="12"
+                           TextWrapping="Wrap" Margin="0,0,0,14" />
+                <Button Content="SFTP接続を設定..." HorizontalAlignment="Left" Click="OnOpenSftpDialogClick" Padding="14,8" />
             </StackPanel>
         </Grid>
 

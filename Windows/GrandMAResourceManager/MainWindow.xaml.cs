@@ -50,6 +50,21 @@ public partial class MainWindow : Window
         Vm.RemoveSource(config);
     }
 
+    private void OnEditSftpSourceClick(object sender, RoutedEventArgs e)
+    {
+        var menuItem = (MenuItem)sender;
+        var contextMenu = (ContextMenu)menuItem.Parent;
+        var listBoxItem = (ListBoxItem)contextMenu.PlacementTarget;
+        var config = (SourceConfig)listBoxItem.DataContext;
+        if (config.Kind != SourceKind.Sftp) return; // only SFTP Sources have connection settings to edit
+
+        var dialog = new SftpConnectionDialog(config) { Owner = this };
+        if (dialog.ShowDialog() == true && dialog.ResultConfig is { } updated)
+        {
+            Vm.Store.UpdateSource(updated);
+        }
+    }
+
     // MARK: USB detection banner
 
     private void OnAddDetectedUsbClick(object sender, RoutedEventArgs e)

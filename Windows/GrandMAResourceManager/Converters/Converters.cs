@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 using GrandMAResourceManager.Models;
 
 namespace GrandMAResourceManager.Converters;
@@ -73,6 +74,25 @@ public sealed class FileEntryGlyphConverter : IValueConverter
     // Segoe MDL2 Assets: E8B7 = OpenFile (folder), E8A5 = Page2 (document).
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) =>
         value is true ? "" : "";
+
+    public object ConvertBack(object value, Type targetType, object? parameter, CultureInfo culture) =>
+        throw new NotSupportedException();
+}
+
+/// <summary>Maps an SFTP Source's connection state (null = connecting/unknown,
+/// true = connected, false = error/disconnected) to a status-dot color.</summary>
+public sealed class SftpConnectedBrushConverter : IValueConverter
+{
+    private static readonly SolidColorBrush Green = new(Color.FromRgb(0x34, 0xC7, 0x59));
+    private static readonly SolidColorBrush Red = new(Color.FromRgb(0xFF, 0x6B, 0x6B));
+    private static readonly SolidColorBrush Gray = new(Color.FromRgb(0x9A, 0x9A, 0xA0));
+
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value switch
+    {
+        true => Green,
+        false => Red,
+        _ => Gray
+    };
 
     public object ConvertBack(object value, Type targetType, object? parameter, CultureInfo culture) =>
         throw new NotSupportedException();

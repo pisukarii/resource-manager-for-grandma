@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using GrandMAResourceManager.Services;
 
 namespace GrandMAResourceManager.Models;
 
@@ -35,9 +36,48 @@ public sealed partial class SourceConfig : ObservableObject
 
     public ConsoleFamily ResolvedFamily => Family ?? ConsoleFamily.Ma3;
 
+    // --- SFTP-only fields (Kind == SourceKind.Sftp) ---
+
+    public string? Host { get; set; }
+    public int? Port { get; set; }
+    public string? Username { get; set; }
+    public ConnectionTarget? ConnectionTarget { get; set; }
+
+    /// <summary>
+    /// The remote path this Source is rooted at (e.g. the console's
+    /// <c>/MALighting/grandma3</c>, or an onPC install folder reached over
+    /// plain SSH). Named "override" for parity with the macOS app, where it
+    /// exists so a per-console/version path can be corrected without a code
+    /// change.
+    /// </summary>
+    public string? BasePathOverride { get; set; }
+
+    /// <summary>
+    /// Live connection status for an SFTP Source, pushed here by the backing
+    /// <see cref="Sources.SftpFileSource"/> whenever it changes — null while
+    /// connecting/unknown, true once connected, false on error/disconnect.
+    /// Kept on the shared config (rather than only on the live IFileSource)
+    /// so the sidebar's status dot can bind straight to it like every other
+    /// Source row property.
+    /// </summary>
+    [ObservableProperty]
+    private bool? _sftpConnected;
+
     /// <summary>Segoe MDL2 Assets glyph for this Source's kind, for XAML binding.</summary>
     public string KindGlyph => Kind.Glyph();
 
     /// <summary>Compact "MA3"/"MA2" badge text, for XAML binding.</summary>
     public string FamilyBadge => ResolvedFamily.ShortLabel();
+
+    public bool IsSftp => Kind == SourceKind.Sftp;
+
+    /// <summary>
+    /// Whether this SFTP Source's host shares a subnet with one of this PC's
+    /// own network interfaces — flagged in the sidebar as "MA Net" so the
+    /// user can tell it's a direct LAN hop (e.g. through the console's Manet
+    /// port) rather than a routed connection.
+    /// </summary>
+    public bool ShowMaNetBadge => IsSftp && Host is { Length: > 0 } host && NetworkInterfaceHelper.IsHostOnLocalSubnet(host);
+
+    public string MaNetLabel => $"MA Net ({Host})";
 }

@@ -10,6 +10,7 @@
     <Window.Resources>
         <ContextMenu x:Key="SourceRowContextMenu">
             <MenuItem Header="名前を変更..." Click="OnRenameSourceClick" />
+            <MenuItem Header="接続設定を編集..." Click="OnEditSftpSourceClick" />
             <MenuItem Header="削除" Click="OnRemoveSourceClick" />
         </ContextMenu>
 
@@ -150,9 +151,17 @@
                             <DataTemplate DataType="{x:Type models:SourceConfig}">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Style="{StaticResource IconTextStyle}" Text="{Binding KindGlyph}" Margin="0,0,8,0" />
-                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Margin="0,0,6,0" />
-                                    <Border Background="#33808080" CornerRadius="8" Padding="5,1">
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Margin="0,0,6,0" TextTrimming="CharacterEllipsis" />
+                                    <Ellipse Width="8" Height="8" Margin="0,0,6,0" VerticalAlignment="Center"
+                                             Visibility="{Binding IsSftp, Converter={StaticResource BoolToVis}}"
+                                             Fill="{Binding SftpConnected, Converter={StaticResource SftpConnectedBrush}}"
+                                             ToolTip="SFTP接続状態" />
+                                    <Border Background="#33808080" CornerRadius="8" Padding="5,1" Margin="0,0,6,0">
                                         <TextBlock Text="{Binding FamilyBadge}" FontSize="10" FontWeight="SemiBold" />
+                                    </Border>
+                                    <Border Background="#33FFB03B" CornerRadius="8" Padding="5,1"
+                                            Visibility="{Binding ShowMaNetBadge, Converter={StaticResource BoolToVis}}">
+                                        <TextBlock Text="{Binding MaNetLabel}" FontSize="9" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}" />
                                     </Border>
                                 </StackPanel>
                             </DataTemplate>
