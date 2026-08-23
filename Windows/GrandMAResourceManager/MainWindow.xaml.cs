@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -89,35 +90,50 @@ public partial class MainWindow : Window
         }
     }
 
-    // MARK: Drop onto a Source row in the sidebar (cross-source import)
+    // MARK: Drop onto a Source row in the sidebar (cross-source import,
+    // including a drag from another Source's own file list)
 
     private void OnSourceRowDragOver(object sender, System.Windows.DragEventArgs e)
     {
-        e.Effects = e.Data.GetDataPresent(DataFormats.FileDrop) && Vm.SelectedCategory is not null
-            ? DragDropEffects.Copy
-            : DragDropEffects.None;
+        bool hasPayload = e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(InternalFileRef.Format);
+        e.Effects = hasPayload && Vm.SelectedCategory is not null ? DragDropEffects.Copy : DragDropEffects.None;
         e.Handled = true;
     }
 
     private async void OnSourceRowDrop(object sender, System.Windows.DragEventArgs e)
     {
-        if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
         var listBoxItem = FindAncestor<ListBoxItem>(e.OriginalSource as DependencyObject);
         if (listBoxItem?.DataContext is not SourceConfig targetConfig) return;
+
+        if (e.Data.GetData(InternalFileRef.Format) is string refJson && InternalFileRef.Deserialize(refJson) is { } internalRef)
+        {
+            await Vm.TransferToSourceRowAsync(internalRef, targetConfig);
+            return;
+        }
+
+        if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
         var paths = (string[])e.Data.GetData(DataFormats.FileDrop);
         await Vm.ImportToOtherSourceAsync(targetConfig, paths);
     }
 
-    // MARK: Drop into the file list (import into current folder)
+    // MARK: Drop into the file list (import into current folder, including a
+    // drag from another Source's own file list)
 
     private void OnFileListDragOver(object sender, System.Windows.DragEventArgs e)
     {
-        e.Effects = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
+        bool hasPayload = e.Data.GetDataPresent(DataFormats.FileDrop) || e.Data.GetDataPresent(InternalFileRef.Format);
+        e.Effects = hasPayload ? DragDropEffects.Copy : DragDropEffects.None;
         e.Handled = true;
     }
 
     private async void OnFileListDrop(object sender, System.Windows.DragEventArgs e)
     {
+        if (e.Data.GetData(InternalFileRef.Format) is string refJson && InternalFileRef.Deserialize(refJson) is { } internalRef)
+        {
+            await Vm.TransferIntoCurrentFolderAsync(internalRef);
+            return;
+        }
+
         if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
         var paths = (string[])e.Data.GetData(DataFormats.FileDrop);
         await Vm.ImportFilesAsync(paths);
@@ -142,11 +158,21 @@ public partial class MainWindow : Window
 
         var listViewItem = FindAncestor<ListViewItem>(e.OriginalSource as DependencyObject);
         if (listViewItem?.DataContext is not FileEntry entry) return;
+        var sourceId = Vm.SelectedSourceConfig?.Id;
+        if (sourceId is null) return;
 
+        var data = new DataObject();
+        // Real on-disk backing (Local/USB) lets the row also drag out to
+        // Explorer/other apps; SFTP entries have none, so they only carry
+        // the internal ref below (still enough for Source-to-Source drags).
         var localPath = Vm.SelectedSource?.LocalFilePath(entry.Path);
-        if (localPath is null) return; // no on-disk backing (not expected for this app, but be safe)
+        if (localPath is not null)
+        {
+            data.SetData(DataFormats.FileDrop, new[] { localPath });
+        }
+        var internalRef = new InternalFileRef(sourceId.Value, entry.Path.Components.ToArray());
+        data.SetData(InternalFileRef.Format, internalRef.Serialize());
 
-        var data = new DataObject(DataFormats.FileDrop, new[] { localPath });
         DragDrop.DoDragDrop(FileListView, data, DragDropEffects.Copy);
     }
 

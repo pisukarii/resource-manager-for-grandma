@@ -291,6 +291,68 @@ public partial class MainViewModel : ObservableObject
         await ReloadAsync();
     }
 
+    /// <summary>Drop of another Source's row onto a Source row in the sidebar
+    /// — imports into the target's current-category folder.</summary>
+    public async Task TransferToSourceRowAsync(InternalFileRef internalRef, SourceConfig targetConfig)
+    {
+        if (SelectedCategory is null) return;
+        var target = Store.SourceFor(targetConfig.Id);
+        if (target is null) return;
+        await TransferInternalAsync(internalRef, target, target.CategoryPath(SelectedCategory));
+    }
+
+    /// <summary>Drop of another Source's row into the currently open file list.</summary>
+    public async Task TransferIntoCurrentFolderAsync(InternalFileRef internalRef)
+    {
+        var target = SelectedSource;
+        if (target is null) return;
+        await TransferInternalAsync(internalRef, target, CurrentPath);
+    }
+
+    /// <summary>Resolves an internal-ref drag payload into a copyOut (from the
+    /// origin Source to a temp file) then copyIn (into the target), since
+    /// neither side may be local disk (SFTP -> SFTP included). Mirrors the
+    /// macOS app's <c>CrossSourceTransfer.transferBetweenSources</c>.</summary>
+    private async Task TransferInternalAsync(InternalFileRef internalRef, IFileSource target, RelativePath destination)
+    {
+        if (internalRef.SourceId == target.Config.Id) return; // dropped back onto its own Source
+        var origin = Store.SourceFor(internalRef.SourceId);
+        if (origin is null) return;
+
+        var path = new RelativePath(internalRef.PathComponents);
+        var fileName = internalRef.PathComponents.Length > 0
+            ? internalRef.PathComponents[^1]
+            : Guid.NewGuid().ToString();
+        var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        Directory.CreateDirectory(tempDir);
+        var tempPath = Path.Combine(tempDir, fileName);
+
+        IsTransferring = true;
+        TransferLabel = $"{fileName} を {origin.Config.Name} から {target.Config.Name} へ転送中...";
+        try
+        {
+            await origin.CopyOutAsync(path, tempPath);
+            await target.CopyInAsync(tempPath, destination);
+        }
+        catch (Exception ex)
+        {
+            ImportError = ex.Message;
+        }
+        finally
+        {
+            IsTransferring = false;
+            try { Directory.Delete(tempDir, recursive: true); } catch { /* best-effort cleanup */ }
+        }
+
+        // The origin's folder can go stale mid-transfer too (gma3_library
+        // content in particular may be actively rewritten by the
+        // console/onPC) — refresh whichever side is currently visible.
+        if (SelectedSource?.Id == target.Id || SelectedSource?.Id == origin.Id)
+        {
+            await ReloadAsync();
+        }
+    }
+
     public async Task ImportToOtherSourceAsync(SourceConfig targetConfig, IEnumerable<string> localPaths)
     {
         if (SelectedCategory is null) return;
