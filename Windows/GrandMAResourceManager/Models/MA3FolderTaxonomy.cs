@@ -48,5 +48,9 @@ public static class MA3FolderTaxonomy
         new ConsoleCategory("mvr", "MVR", Glyphs.Folder, Library, new RelativePath(new[] { "gma3_library", "mvr" })),
         new ConsoleCategory("netkeys", "Net Keys", Glyphs.Folder, Library, new RelativePath(new[] { "gma3_library", "netkeys" })),
         new ConsoleCategory("scribbles", "Scribbles", Glyphs.Folder, Library, new RelativePath(new[] { "gma3_library", "scribbles" })),
+        new ConsoleCategory("users", "Users", Glyphs.Person, Library, new RelativePath(new[] { "gma3_library", "users" })),
+        new ConsoleCategory("systemtest", "System Test", Glyphs.Checkmark, Library, new RelativePath(new[] { "gma3_library", "SystemTest" })),
+        new ConsoleCategory("systemtestarchive", "System Test Archive", Glyphs.Folder, Library, new RelativePath(new[] { "gma3_library", "SystemTestArchive" })),
+        new ConsoleCategory("systemtesttemp", "System Test Temp", Glyphs.Folder, Library, new RelativePath(new[] { "gma3_library", "SystemTestTemp" })),
     };
 }

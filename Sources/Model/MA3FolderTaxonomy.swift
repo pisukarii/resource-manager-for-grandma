@@ -103,5 +103,13 @@ enum MA3FolderTaxonomy {
                     relativePath: RelativePath(components: ["gma3_library", "netkeys"])),
         ConsoleCategory(id: "scribbles", displayName: "Scribbles", symbolName: "pencil.and.scribble", rootKind: .library,
                     relativePath: RelativePath(components: ["gma3_library", "scribbles"])),
+        ConsoleCategory(id: "users", displayName: "Users", symbolName: "person.2", rootKind: .library,
+                    relativePath: RelativePath(components: ["gma3_library", "users"])),
+        ConsoleCategory(id: "systemtest", displayName: "System Test", symbolName: "checkmark.shield", rootKind: .library,
+                    relativePath: RelativePath(components: ["gma3_library", "SystemTest"])),
+        ConsoleCategory(id: "systemtestarchive", displayName: "System Test Archive", symbolName: "archivebox", rootKind: .library,
+                    relativePath: RelativePath(components: ["gma3_library", "SystemTestArchive"])),
+        ConsoleCategory(id: "systemtesttemp", displayName: "System Test Temp", symbolName: "clock.badge.questionmark", rootKind: .library,
+                    relativePath: RelativePath(components: ["gma3_library", "SystemTestTemp"])),
     ]
 }
