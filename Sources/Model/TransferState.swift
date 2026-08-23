@@ -16,6 +16,14 @@ final class TransferState: @unchecked Sendable {
     var label = ""
     var errorMessage: String?
 
+    /// Bumped every time a transfer finishes (success or failure). Views
+    /// showing a folder listing observe this (alongside the current path)
+    /// to refresh themselves afterward — a Source's file list can otherwise
+    /// go stale mid-transfer if the origin file was changed/removed
+    /// (e.g. `gma3_library` content, which the console/onPC may be actively
+    /// writing) between when the list was loaded and when the transfer ran.
+    private(set) var completedCount = 0
+
     func begin(label: String) {
         self.label = label
         self.progress = 0
@@ -26,5 +34,6 @@ final class TransferState: @unchecked Sendable {
     func finish(error: String? = nil) {
         isActive = false
         errorMessage = error
+        completedCount += 1
     }
 }

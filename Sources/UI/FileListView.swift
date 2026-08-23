@@ -105,6 +105,16 @@ struct FileListView: View {
             selectedManufacturer = nil
             await reload()
         }
+        // Re-list after any transfer finishes anywhere in the app (not just
+        // ones through this folder) — cheap enough, and it means a Source
+        // whose backing files are actively changing (gma3_library, which
+        // the console/onPC may be writing to at any time) doesn't keep
+        // showing an entry that's already gone, inviting the same failure
+        // again on retry.
+        .task(id: transferState.completedCount) {
+            guard transferState.completedCount > 0 else { return }
+            await reload()
+        }
         .alert("名前を変更", isPresented: Binding(
             get: { renamingEntry != nil },
             set: { if !$0 { renamingEntry = nil } }

@@ -1,5 +1,20 @@
 import Foundation
 
+/// A local-disk read/copy failing with "no such file" (`NSCocoaErrorDomain`
+/// code 4 or 260) almost always means the source file was renamed/removed
+/// between when the folder was listed and when the transfer actually ran —
+/// common for `gma3_library` content, which the console/onPC may be
+/// actively writing to — rather than a bug in how the path was built.
+/// Surfacing that explanation (instead of the raw Cocoa error text) tells
+/// the user what to actually do about it: refresh and retry.
+private func transferErrorMessage(for error: Error) -> String {
+    let nsError = error as NSError
+    if nsError.domain == NSCocoaErrorDomain, nsError.code == 4 || nsError.code == 260 {
+        return "ファイルが見つかりませんでした。一覧を読み込んだ後にファイルが変更・削除された可能性があります(コンソール/onPC側が同時に書き込んでいる場合など)。一覧を更新してからもう一度お試しください。"
+    }
+    return error.localizedDescription
+}
+
 /// Resolves a dropped payload (a real local file, or an in-app reference to
 /// a row on another Source) into a `copyIn` on `targetSource`. For
 /// `.internalRef`, this is a two-hop transfer — `copyOut` from the origin
@@ -25,7 +40,7 @@ func handleDrop(
                 }
                 transferState.finish()
             } catch {
-                transferState.finish(error: error.localizedDescription)
+                transferState.finish(error: transferErrorMessage(for: error))
             }
 
         case .internalRef(let ref):
@@ -67,6 +82,6 @@ private func transferBetweenSources(
         }
         transferState.finish()
     } catch {
-        transferState.finish(error: error.localizedDescription)
+        transferState.finish(error: transferErrorMessage(for: error))
     }
 }
