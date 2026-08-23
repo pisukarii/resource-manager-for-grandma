@@ -26,7 +26,7 @@ final class FileIndex {
 
         var collected: [IndexedEntry] = []
         for source in sources {
-            for category in source.config.resolvedFamily.categories {
+            for category in source.config.visibleCategories {
                 let path = source.categoryPath(for: category)
                 guard let items = try? await source.list(path) else { continue }
                 for item in items {

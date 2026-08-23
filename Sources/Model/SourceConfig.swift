@@ -51,6 +51,23 @@ struct SourceConfig: Codable, Identifiable, Hashable {
 
     var resolvedFamily: ConsoleFamily { family ?? .ma3 }
 
+    /// True when this `.local` Source points directly at the
+    /// version-independent `gma3_library` folder (added as its own Source)
+    /// rather than a specific `gma3_x.y.z` version folder — in which case
+    /// version-scoped categories (Shows/Backups/Fixture Library/Resource,
+    /// which live inside a version folder's `shared/`) don't apply.
+    var isLibraryOnlyLocalSource: Bool {
+        kind == .local && (path as NSString?)?.lastPathComponent == "gma3_library"
+    }
+
+    /// The category list to actually show for this Source — every category
+    /// normally, or just the library-rooted ones for a `gma3_library`-only
+    /// Source (see `isLibraryOnlyLocalSource`).
+    var visibleCategories: [ConsoleCategory] {
+        let all = resolvedFamily.categories
+        return isLibraryOnlyLocalSource ? all.filter { $0.rootKind != .versionScoped } : all
+    }
+
     init(
         id: UUID = UUID(),
         name: String,

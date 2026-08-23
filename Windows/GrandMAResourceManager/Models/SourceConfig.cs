@@ -1,3 +1,4 @@
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using GrandMAResourceManager.Services;
 
@@ -80,4 +81,31 @@ public sealed partial class SourceConfig : ObservableObject
     public bool ShowMaNetBadge => IsSftp && Host is { Length: > 0 } host && NetworkInterfaceHelper.IsHostOnLocalSubnet(host);
 
     public string MaNetLabel => $"MA Net ({Host})";
+
+    /// <summary>
+    /// True when this Local Source points directly at the version-independent
+    /// <c>gma3_library</c> folder (added as its own Source) rather than a
+    /// specific <c>gma3_x.y.z</c> version folder — in which case
+    /// version-scoped categories (Shows/Backups/Fixture Library/Resource,
+    /// which live inside a version folder's <c>shared\</c>) don't apply.
+    /// </summary>
+    public bool IsLibraryOnlyLocalSource =>
+        Kind == SourceKind.Local && Path is not null &&
+        string.Equals(System.IO.Path.GetFileName(Path.TrimEnd('\\', '/')), "gma3_library", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// The category list to actually show for this Source — every category
+    /// normally, or just the library-rooted ones for a <c>gma3_library</c>-only
+    /// Source (see <see cref="IsLibraryOnlyLocalSource"/>).
+    /// </summary>
+    public IReadOnlyList<ConsoleCategory> VisibleCategories
+    {
+        get
+        {
+            var all = ResolvedFamily.Categories();
+            return IsLibraryOnlyLocalSource
+                ? all.Where(c => c.RootKind != ConsoleCategoryRootKind.VersionScoped).ToList()
+                : all;
+        }
+    }
 }

@@ -102,9 +102,9 @@
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Grid.Column="0" Style="{StaticResource IconTextStyle}"
-                                               Text="{x:Static models:Glyphs.Laptop}"
+                                               Text="{Binding Glyph}"
                                                Foreground="{StaticResource SecondaryForegroundBrush}" Margin="0,0,10,0" />
-                                    <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" />
+                                    <TextBlock Grid.Column="1" Text="{Binding DisplayName}" VerticalAlignment="Center" />
                                     <Border Grid.Column="2" Background="#33FFB03B" CornerRadius="8" Padding="7,2" Margin="0,0,8,0" VerticalAlignment="Center">
                                         <TextBlock Text="{Binding FamilyDisplay}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}" />
                                     </Border>

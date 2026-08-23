@@ -10,7 +10,7 @@ struct CategoryShortcutBar: View {
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 2) {
-                ForEach(source.config.resolvedFamily.categories) { category in
+                ForEach(source.config.visibleCategories) { category in
                     CategoryRow(
                         category: category,
                         isSelected: selectedCategory?.id == category.id,

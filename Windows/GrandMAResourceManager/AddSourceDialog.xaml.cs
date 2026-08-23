@@ -16,6 +16,9 @@ public partial class AddSourceDialog : Window
     private sealed record LocalItem(string Name, string FullPath, ConsoleFamily Family)
     {
         public string FamilyDisplay => Family.DisplayName();
+        public bool IsLibrary => Name == "gma3_library";
+        public string DisplayName => IsLibrary ? "共有ライブラリ (gma3_library)" : Name;
+        public string Glyph => IsLibrary ? Glyphs.Component : Glyphs.Laptop;
     }
 
     private sealed record UsbItem(string DriveRoot, string DataRootPath, ConsoleFamily Family)
@@ -67,13 +70,13 @@ public partial class AddSourceDialog : Window
     private void OnLocalAddClick(object sender, RoutedEventArgs e)
     {
         var item = (LocalItem)((Button)sender).Tag;
-        AddLocal($"onPC {item.Name}", item.FullPath, SourceKind.Local, item.Family);
+        AddLocal(item.IsLibrary ? "共有ライブラリ" : $"onPC {item.Name}", item.FullPath, SourceKind.Local, item.Family);
     }
 
     private void OnLocalItemDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
     {
         if (LocalListBox.SelectedItem is LocalItem item)
-            AddLocal($"onPC {item.Name}", item.FullPath, SourceKind.Local, item.Family);
+            AddLocal(item.IsLibrary ? "共有ライブラリ" : $"onPC {item.Name}", item.FullPath, SourceKind.Local, item.Family);
     }
 
     private void OnUsbAddClick(object sender, RoutedEventArgs e)

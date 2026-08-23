@@ -20,7 +20,7 @@ public sealed class FileIndex
         var collected = new List<IndexedEntry>();
         foreach (var source in sources)
         {
-            foreach (var category in source.Config.ResolvedFamily.Categories())
+            foreach (var category in source.Config.VisibleCategories)
             {
                 List<FileEntry> items;
                 try

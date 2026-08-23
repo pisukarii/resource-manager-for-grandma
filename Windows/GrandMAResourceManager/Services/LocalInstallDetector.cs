@@ -38,6 +38,16 @@ public static class LocalInstallDetector
             if (!Directory.Exists(System.IO.Path.Combine(dir, "shared"))) continue;
             yield return new VersionFolder(name, dir, ConsoleFamily.Ma3);
         }
+
+        // gma3_library itself (Macros/Presets/Fixture Types/...) is shared
+        // across every installed version rather than belonging to one, so
+        // it's offered as its own addable item alongside the version
+        // folders rather than folded into one of them.
+        var libraryDir = System.IO.Path.Combine(Ma3Root, "gma3_library");
+        if (Directory.Exists(libraryDir))
+        {
+            yield return new VersionFolder("gma3_library", libraryDir, ConsoleFamily.Ma3);
+        }
     }
 
     private static IEnumerable<VersionFolder> ScanMa2()

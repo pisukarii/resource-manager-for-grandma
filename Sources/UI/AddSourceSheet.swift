@@ -61,12 +61,13 @@ struct AddSourceSheet: View {
                 Text("検出された onPC バージョン:")
                     .font(.callout.bold())
                 List(detectedVersionFolders) { folder in
+                    let isLibrary = folder.name == "gma3_library"
                     Button {
-                        addLocal(name: "onPC \(folder.name)", url: folder.url)
+                        addLocal(name: isLibrary ? "共有ライブラリ" : "onPC \(folder.name)", url: folder.url)
                     } label: {
                         HStack {
-                            Image(systemName: "laptopcomputer")
-                            Text(folder.name)
+                            Image(systemName: isLibrary ? "books.vertical" : "laptopcomputer")
+                            Text(isLibrary ? "共有ライブラリ (gma3_library)" : folder.name)
                             Spacer()
                             Image(systemName: "plus.circle")
                         }

@@ -76,7 +76,7 @@ public partial class MainViewModel : ObservableObject
         SelectedSourceConfig is null ? null : Store.SourceFor(SelectedSourceConfig.Id);
 
     public IReadOnlyList<ConsoleCategory> CurrentCategories =>
-        SelectedSourceConfig?.ResolvedFamily.Categories() ?? Array.Empty<ConsoleCategory>();
+        SelectedSourceConfig?.VisibleCategories ?? Array.Empty<ConsoleCategory>();
 
     public string BreadcrumbText
     {
