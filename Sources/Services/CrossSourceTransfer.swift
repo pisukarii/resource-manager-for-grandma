@@ -1,4 +1,20 @@
+import AppKit
 import Foundation
+
+/// Native confirmation (blocking, like the ones already used for delete
+/// confirmation) asking whether to overwrite an item that already exists at
+/// the destination — checked before every copy-in so a drop never silently
+/// replaces same-named data.
+@MainActor
+private func confirmOverwrite(fileName: String, targetName: String) -> Bool {
+    let alert = NSAlert()
+    alert.messageText = "上書きの確認"
+    alert.informativeText = "「\(fileName)」は既に\(targetName)に存在します。上書きしますか？"
+    alert.alertStyle = .warning
+    alert.addButton(withTitle: "上書き")
+    alert.addButton(withTitle: "キャンセル")
+    return alert.runModal() == .alertFirstButtonReturn
+}
 
 /// A local-disk read/copy failing with "no such file" (`NSCocoaErrorDomain`
 /// code 4 or 260) almost always means the source file was renamed/removed
@@ -33,7 +49,11 @@ func handleDrop(
     for payload in payloads {
         switch payload {
         case .localFile(let url):
-            transferState.begin(label: "\(url.lastPathComponent) を \(targetSource.config.name) へコピー中...")
+            let fileName = url.lastPathComponent
+            if await targetSource.exists(destinationPath.appending(fileName)) {
+                guard confirmOverwrite(fileName: fileName, targetName: targetSource.config.name) else { continue }
+            }
+            transferState.begin(label: "\(fileName) を \(targetSource.config.name) へコピー中...")
             do {
                 try await targetSource.copyIn(from: url, to: destinationPath) { fraction in
                     Task { @MainActor in transferState.progress = fraction }
@@ -46,6 +66,10 @@ func handleDrop(
         case .internalRef(let ref):
             guard ref.sourceID != targetSource.id else { continue } // dropped back onto its own Source
             guard let originSource = store.source(for: ref.sourceID) else { continue }
+            let fileName = ref.path.components.last ?? ""
+            if await targetSource.exists(destinationPath.appending(fileName)) {
+                guard confirmOverwrite(fileName: fileName, targetName: targetSource.config.name) else { continue }
+            }
             await transferBetweenSources(
                 origin: originSource,
                 path: ref.path,

@@ -15,6 +15,12 @@ public interface IFileSource
 
     Task ConnectAsync();
     Task<List<FileEntry>> ListAsync(RelativePath path);
+
+    /// <summary>Whether an item already exists at this exact path — checked
+    /// before a copy-in so the caller can confirm overwriting instead of
+    /// silently replacing it.</summary>
+    Task<bool> ExistsAsync(RelativePath path);
+
     Task CopyInAsync(string localPath, RelativePath destination);
     Task CopyOutAsync(RelativePath source, string localPath);
     void Reveal(RelativePath path);

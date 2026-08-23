@@ -68,6 +68,12 @@ public sealed partial class DiskFileSource : ObservableObject, IFileSource
         });
     }
 
+    public Task<bool> ExistsAsync(RelativePath path)
+    {
+        var fullPath = ResolvePath(path);
+        return Task.FromResult(File.Exists(fullPath) || Directory.Exists(fullPath));
+    }
+
     public Task CopyInAsync(string localPath, RelativePath destination)
     {
         var destDir = ResolvePath(destination);

@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using GrandMAResourceManager.Models;
+using GrandMAResourceManager.Sources;
 using GrandMAResourceManager.ViewModels;
 
 namespace GrandMAResourceManager;
@@ -104,16 +105,29 @@ public partial class MainWindow : Window
     {
         var listBoxItem = FindAncestor<ListBoxItem>(e.OriginalSource as DependencyObject);
         if (listBoxItem?.DataContext is not SourceConfig targetConfig) return;
+        if (Vm.SelectedCategory is not { } category) return;
+        var target = Vm.Store.SourceFor(targetConfig.Id);
+        if (target is null) return;
+        var destination = target.CategoryPath(category);
 
         if (e.Data.GetData(InternalFileRef.Format) is string refJson && InternalFileRef.Deserialize(refJson) is { } internalRef)
         {
+            var fileName = internalRef.PathComponents.Length > 0 ? internalRef.PathComponents[^1] : null;
+            if (fileName is not null && !await ConfirmOverwriteAsync(target, destination, fileName)) return;
             await Vm.TransferToSourceRowAsync(internalRef, targetConfig);
             return;
         }
 
         if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
         var paths = (string[])e.Data.GetData(DataFormats.FileDrop);
-        await Vm.ImportToOtherSourceAsync(targetConfig, paths);
+        var confirmedPaths = new List<string>();
+        foreach (var path in paths)
+        {
+            if (await ConfirmOverwriteAsync(target, destination, System.IO.Path.GetFileName(path)))
+                confirmedPaths.Add(path);
+        }
+        if (confirmedPaths.Count == 0) return;
+        await Vm.ImportToOtherSourceAsync(targetConfig, confirmedPaths);
     }
 
     // MARK: Drop into the file list (import into current folder, including a
@@ -128,15 +142,38 @@ public partial class MainWindow : Window
 
     private async void OnFileListDrop(object sender, System.Windows.DragEventArgs e)
     {
+        var target = Vm.SelectedSource;
+        if (target is null) return;
+
         if (e.Data.GetData(InternalFileRef.Format) is string refJson && InternalFileRef.Deserialize(refJson) is { } internalRef)
         {
+            var fileName = internalRef.PathComponents.Length > 0 ? internalRef.PathComponents[^1] : null;
+            if (fileName is not null && !await ConfirmOverwriteAsync(target, Vm.CurrentPath, fileName)) return;
             await Vm.TransferIntoCurrentFolderAsync(internalRef);
             return;
         }
 
         if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
         var paths = (string[])e.Data.GetData(DataFormats.FileDrop);
-        await Vm.ImportFilesAsync(paths);
+        var confirmedPaths = new List<string>();
+        foreach (var path in paths)
+        {
+            if (await ConfirmOverwriteAsync(target, Vm.CurrentPath, System.IO.Path.GetFileName(path)))
+                confirmedPaths.Add(path);
+        }
+        if (confirmedPaths.Count == 0) return;
+        await Vm.ImportFilesAsync(confirmedPaths);
+    }
+
+    /// <summary>Prompts to confirm before a copy-in would silently replace an
+    /// existing item of the same name at the destination.</summary>
+    private async Task<bool> ConfirmOverwriteAsync(IFileSource target, RelativePath destinationFolder, string fileName)
+    {
+        if (!await target.ExistsAsync(destinationFolder.Appending(fileName))) return true;
+        var result = MessageBox.Show(this,
+            $"「{fileName}」は既に{target.Config.Name}に存在します。上書きしますか？",
+            "上書きの確認", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+        return result == MessageBoxResult.Yes;
     }
 
     // MARK: Drag a row out to Explorer/other apps

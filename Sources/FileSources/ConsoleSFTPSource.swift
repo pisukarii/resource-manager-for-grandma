@@ -93,6 +93,11 @@ final class ConsoleSFTPSource: FileSource {
     /// link in particular (show files can be tens of MB).
     private static let chunkSize = 512 * 1024
 
+    func exists(_ path: RelativePath) async -> Bool {
+        guard let sftp = try? activeClient() else { return false }
+        return (try? await sftp.getAttributes(at: remotePath(for: path))) != nil
+    }
+
     func copyIn(from localURL: URL, to path: RelativePath, progress: (@Sendable (Double) -> Void)?) async throws {
         let sftp = try activeClient()
         let totalSize = (try? FileManager.default.attributesOfItem(atPath: localURL.path)[.size] as? Int64) ?? nil

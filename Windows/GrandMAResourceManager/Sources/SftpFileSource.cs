@@ -88,6 +88,12 @@ public sealed partial class SftpFileSource : ObservableObject, IFileSource
             .ToList();
     }
 
+    public Task<bool> ExistsAsync(RelativePath path)
+    {
+        var client = ActiveClient();
+        return Task.Run(() => client.Exists(RemotePath(path)));
+    }
+
     public async Task CopyInAsync(string localPath, RelativePath destination)
     {
         var client = ActiveClient();

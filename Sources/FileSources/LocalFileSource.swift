@@ -67,6 +67,13 @@ final class DiskFileSource: FileSource {
         }.value
     }
 
+    func exists(_ path: RelativePath) async -> Bool {
+        let targetURL = url(for: path)
+        return await Task.detached(priority: .userInitiated) {
+            FileManager.default.fileExists(atPath: targetURL.path)
+        }.value
+    }
+
     func copyIn(from localURL: URL, to path: RelativePath, progress: (@Sendable (Double) -> Void)?) async throws {
         let destinationURL = url(for: path).appendingPathComponent(localURL.lastPathComponent)
         try await Task.detached(priority: .userInitiated) {

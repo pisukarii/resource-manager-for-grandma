@@ -75,6 +75,10 @@ protocol FileSource: AnyObject, Identifiable {
 
     func connect() async throws
     func list(_ path: RelativePath) async throws -> [FileEntry]
+    /// Whether an item already exists at this exact path — checked before a
+    /// copy-in so the caller can confirm overwriting instead of silently
+    /// replacing it.
+    func exists(_ path: RelativePath) async -> Bool
     /// `progress` reports fraction complete (0...1) when the backend can
     /// determine it (chunked SFTP transfer); nil is a valid/expected value
     /// for backends where progress isn't meaningful (fast local disk copy).
