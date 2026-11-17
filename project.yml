@@ -1,6 +1,7 @@
 name: GrandMAResourceManager
 options:
   bundleIdPrefix: com.mochizuki.grandmaresourcemanager
+  developmentLanguage: ja
   deploymentTarget:
     macOS: "14.0"
   createIntermediateGroups: true
@@ -33,7 +34,8 @@ targets:
         CFBundleShortVersionString: "0.1.0"
         CFBundleVersion: "1"
         LSMinimumSystemVersion: "14.0"
-        NSHumanReadableCopyright: ""
+        NSHumanReadableCopyright: "© 2026 pisukari"
+        CFBundleLocalizations: [ja, en]
         NSPrincipalClass: NSApplication
         NSHighResolutionCapable: true
     entitlements:

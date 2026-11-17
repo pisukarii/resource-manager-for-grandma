@@ -26,7 +26,7 @@ final class FileIndex {
 
         var collected: [IndexedEntry] = []
         for source in sources {
-            for category in source.config.visibleCategories {
+            for category in source.config.visibleCategories where CategorySettings.shared.isVisible(category) {
                 let path = source.categoryPath(for: category)
                 guard let items = try? await source.list(path) else { continue }
                 for item in items {

@@ -5,6 +5,7 @@ import UniformTypeIdentifiers
 struct FileListView: View {
     @Environment(SourceStore.self) private var store
     @Environment(TransferState.self) private var transferState
+    @Environment(AppUIState.self) private var uiState
     let source: any FileSource
     let category: ConsoleCategory
     @Binding var currentPath: RelativePath
@@ -68,6 +69,13 @@ struct FileListView: View {
         return result.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
     }
 
+    /// The single selected file (not folder) the bottom editor pane shows.
+    private var inspectedEntry: FileEntry? {
+        guard !isSelectionMode, selection.count == 1, let id = selection.first,
+              let entry = entries.first(where: { $0.id == id }), !entry.isDirectory else { return nil }
+        return entry
+    }
+
     private var breadcrumbSuffix: [String] {
         let base = source.categoryPath(for: category).components
         guard currentPath.components.count >= base.count,
@@ -87,17 +95,31 @@ struct FileListView: View {
                 selectionBar
             }
             Divider()
-            content
-                .overlay(dropOverlay)
-                .onDrop(of: [.fileURL, .ma3InternalFileRef], isTargeted: $isDropTargeted) { providers in
-                    loadDropPayloads(from: providers) { payloads in
-                        Task {
-                            await handleDrop(payloads, into: source, at: currentPath, store: store, transferState: transferState)
-                            await reload()
+            // Selecting a single file splits the pane: list on top, an
+            // editor/inspector (preview, swap image) on the bottom half.
+            VSplitView {
+                content
+                    .frame(minHeight: 140)
+                    .overlay(dropOverlay)
+                    .onDrop(of: [.fileURL, .ma3InternalFileRef], isTargeted: $isDropTargeted) { providers in
+                        loadDropPayloads(from: providers) { payloads in
+                            Task {
+                                await handleDrop(payloads, into: source, at: currentPath, store: store, transferState: transferState)
+                                await reload()
+                            }
                         }
+                        return true
                     }
-                    return true
+                if let inspected = inspectedEntry {
+                    ResourceInspectorView(
+                        source: source,
+                        entry: inspected,
+                        onChanged: { Task { await reload() } },
+                        onClose: { selection = [] }
+                    )
+                    .frame(minHeight: 200, idealHeight: 300)
                 }
+            }
         }
         .task(id: currentPath) {
             selection = []
@@ -111,6 +133,11 @@ struct FileListView: View {
         // the console/onPC may be writing to at any time) doesn't keep
         // showing an entry that's already gone, inviting the same failure
         // again on retry.
+        // Menu bar: 表示 > 一覧を更新 (⌘R).
+        .task(id: uiState.refreshTick) {
+            guard uiState.refreshTick > 0 else { return }
+            await reload()
+        }
         .task(id: transferState.completedCount) {
             guard transferState.completedCount > 0 else { return }
             await reload()
@@ -267,23 +294,36 @@ struct FileListView: View {
             List(filteredEntries, selection: $selection) { entry in
                 FileRowView(
                     entry: entry,
+                    thumbnailURL: !entry.isDirectory && [.image, .video].contains(ResourceKind.of(entry.name))
+                        ? source.localFileURL(for: entry.path) : nil,
                     isSelectionMode: isSelectionMode,
                     isChecked: selection.contains(entry.id),
                     onToggleCheck: { toggleSelection(entry) }
                 )
                     .contentShape(Rectangle())
-                    .onTapGesture(count: isSelectionMode ? 1 : 2) {
-                        if isSelectionMode {
-                            toggleSelection(entry)
-                        } else {
-                            handleOpen(entry)
-                        }
+                    // Double-click opens. A tap gesture on the row swallows the
+                    // List's own click-to-select, so single clicks are handled
+                    // explicitly (simultaneously, so they aren't delayed
+                    // waiting to see if a second click follows).
+                    .onTapGesture(count: 2) {
+                        if !isSelectionMode { handleOpen(entry) }
                     }
+                    .simultaneousGesture(TapGesture().onEnded { handleSingleClick(entry) })
                     .contextMenu {
                         if entry.isDirectory {
                             Button("開く") { handleOpen(entry) }
                         } else {
                             Button("Finderで表示...") { revealAfterCopy(entry) }
+                            if ResourceKind.of(entry.name) == .protectedFixture {
+                                // grandMA2 .pxml can't be read, but a GDTF for the same
+                                // fixture may exist on GDTF Share.
+                                Button("GDTF Shareで探す(機種名「\(GDTFShareSearch.searchWords(forFileName: entry.name))」)") {
+                                    uiState.searchGDTFShare(fileName: entry.name, scope: .model)
+                                }
+                                Button("GDTF Shareで探す(メーカー名「\(GDTFShareSearch.searchWords(forFileName: entry.name, scope: .manufacturer))」)") {
+                                    uiState.searchGDTFShare(fileName: entry.name, scope: .manufacturer)
+                                }
+                            }
                         }
                         if source.supportsDestructiveOperations {
                             Divider()
@@ -304,6 +344,19 @@ struct FileListView: View {
             .strokeBorder(Color.accentColor, lineWidth: isDropTargeted ? 3 : 0)
             .padding(4)
             .allowsHitTesting(false)
+    }
+
+    /// Single click on a row: toggles the checkbox in selection mode;
+    /// otherwise selects just that row (which opens the editor pane below).
+    /// ⌘/⇧-click is left to the List so multi-select still works.
+    private func handleSingleClick(_ entry: FileEntry) {
+        if isSelectionMode {
+            toggleSelection(entry)
+            return
+        }
+        let flags = NSApp.currentEvent?.modifierFlags ?? []
+        guard !flags.contains(.command), !flags.contains(.shift) else { return }
+        selection = [entry.id]
     }
 
     private func toggleSelection(_ entry: FileEntry) {

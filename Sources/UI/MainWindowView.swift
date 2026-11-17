@@ -50,10 +50,28 @@ struct MainWindowView: View {
         } message: {
             Text(transferState.errorMessage ?? "")
         }
+        // If the category being viewed gets hidden in 設定, drop the selection.
+        .onChange(of: CategorySettings.shared.hiddenIDs) {
+            if let category = selectedCategory, !CategorySettings.shared.isVisible(category) {
+                selectedCategory = nil
+            }
+        }
         .onAppear {
             if selectedSourceID == nil {
                 selectedSourceID = store.configs.first?.id
             }
+        }
+        .sheet(item: Binding(
+            get: { uiState.gdtfDrop },
+            set: { uiState.gdtfDrop = $0 }
+        )) { request in
+            GDTFDropSheet(request: request)
+        }
+        .sheet(isPresented: Binding(
+            get: { uiState.isAddSourcePresented },
+            set: { uiState.isAddSourcePresented = $0 }
+        )) {
+            AddSourceSheet()
         }
         .sheet(isPresented: Binding(
             get: { uiState.isQuickOpenPresented },

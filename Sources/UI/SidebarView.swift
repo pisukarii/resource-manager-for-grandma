@@ -16,6 +16,7 @@ struct SidebarView: View {
     @State private var renamingConfig: SourceConfig?
     @State private var renameText = ""
     @State private var editingSFTPConfig: SourceConfig?
+    @State private var backupConfig: SourceConfig?
 
     var body: some View {
         List(selection: $selectedSourceID) {
@@ -38,6 +39,22 @@ struct SidebarView: View {
                                 editingSFTPConfig = config
                             }
                         }
+                        if MA3Launcher.supportsLaunch(config) {
+                            Divider()
+                            // Start the onPC app of this version folder (gma3_2.5.1 -> grandMA3 onPC 2.5.1.x).
+                            if let app = MA3Launcher.app(for: config) {
+                                Button("MA3 onPCを起動(\(app.name))") { MA3Launcher.launch(app) }
+                            } else {
+                                Button("MA3 onPCを起動(この版のアプリが見つかりません)") {}
+                                    .disabled(true)
+                            }
+                        }
+                        Divider()
+                        Button("USBにバックアップ...") {
+                            backupConfig = config
+                        }
+                        .disabled(!BackupPlan.isSupported(config))
+                        Divider()
                         Button("削除", role: .destructive) {
                             store.removeSource(id: config.id)
                         }
@@ -47,6 +64,9 @@ struct SidebarView: View {
         }
         .sheet(item: $editingSFTPConfig) { config in
             EditSFTPSourceSheet(existingConfig: config)
+        }
+        .sheet(item: $backupConfig) { config in
+            BackupSheet(config: config)
         }
         .listStyle(.sidebar)
         .toolbar {

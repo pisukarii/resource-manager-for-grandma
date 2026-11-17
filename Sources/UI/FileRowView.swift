@@ -2,6 +2,8 @@ import SwiftUI
 
 struct FileRowView: View {
     let entry: FileEntry
+    /// On-disk image to show as a small thumbnail instead of the generic file icon.
+    var thumbnailURL: URL? = nil
     var isSelectionMode: Bool = false
     var isChecked: Bool = false
     var onToggleCheck: (() -> Void)? = nil
@@ -18,9 +20,13 @@ struct FileRowView: View {
                 }
                 .buttonStyle(.plain)
             }
-            Image(systemName: entry.isDirectory ? Self.folderIconName(for: entry.name) : "doc")
-                .foregroundStyle(entry.isDirectory ? .blue : .secondary)
-                .frame(width: 20)
+            if let thumbnailURL {
+                FileThumbnailView(url: thumbnailURL)
+            } else {
+                Image(systemName: entry.isDirectory ? Self.folderIconName(for: entry.name) : ([.fixture, .protectedFixture].contains(ResourceKind.of(entry.name)) ? "lightbulb.2" : "doc"))
+                    .foregroundStyle(entry.isDirectory ? .blue : .secondary)
+                    .frame(width: 20)
+            }
             Text(entry.name)
             Spacer()
             if let size = entry.size, !entry.isDirectory {
