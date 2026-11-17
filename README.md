@@ -1,48 +1,38 @@
 # Resource Manager for grandMA
 
-grandMA3 / grandMA2 のファイルに素早くアクセスするための Mac / Windows アプリです。ローカル onPC・USBメモリ・実機コンソール/他のonPC(SFTP)を横断して Shows / Macros / Presets などのフォルダに一発でジャンプし、ドラッグ&ドロップでインポート/エクスポートできます。
+grandMA3 / grandMA2 のファイルに素早くアクセスし、管理するための Mac アプリです。ローカル onPC・USBメモリ・実機コンソール/他のonPC(SFTP)を横断して Shows / Macros / Presets などのフォルダに一発でジャンプし、ドラッグ&ドロップでインポート/エクスポートできます。
 
 **grandMA3 / grandMA2 のデータが入ったUSBメモリを挿すだけで自動検出**され、「Sourceとして追加しますか？」と聞かれるので、毎回手動でボリュームを探す必要がありません。
 
-> **Note:** 実機コンソールへのSFTP接続機能は実装済みですが、実機での動作検証がまだできていません。確認でき次第このREADMEで報告します。ローカル onPC / USBメモリでの利用はどちらのプラットフォームでも動作確認済みです。
+> **Note:** 実機コンソールへのSFTP接続機能は実装済みですが、実機での動作検証がまだできていません。確認でき次第このREADMEで報告します。ローカル onPC / USBメモリでの利用は動作確認済みです。
 
 ## 主な機能
 
-- **grandMA3 / grandMA2 のUSBメモリを挿すだけで自動検出**、ワンクリックでSourceとして追加
-- ローカル onPC(macOS: `~/MALightingTechnology`、Windows: `C:\ProgramData\MALightingTechnology` など)、USBメモリを横断してファイル管理
-- Shows / Macros / Sequences / Presets など grandMA3 のフォルダ構成をワンクリックでナビゲート
-- ドラッグ&ドロップでのインポート/エクスポート
-- ファイルのリネーム・削除(確認ダイアログ、ゴミ箱/リサイクル箱送り)
-- クイックオープン検索(全Source横断)
-- フィクスチャライブラリのメーカー名でのフィルタ
+**ファイル管理**
+- USBメモリを挿すだけで自動検出、ワンクリックでSourceとして追加
+- ローカル onPC(`~/MALightingTechnology`)・USBメモリ・SFTPを横断してファイル管理
+- Shows / Macros / Sequences / Presets など grandMA3 のフォルダ構成をワンクリックでナビゲート(共有ライブラリ `gma3_library` も単独のSourceとして追加可能)
+- Source間のドラッグ&ドロップ(SFTP含む)、Finderからのインポート。同名ファイルがあれば上書き確認
+- ファイルのリネーム・削除(確認ダイアログ、ゴミ箱送り)
+- クイックオープン検索(全Source横断)、フィクスチャライブラリのメーカー名フィルタ
+- 設定(⌘,)や左のカテゴリ一覧から、表示するカテゴリをチェックで選択
 
-## macOS / Windows 対応表
+**プレビューとエディター(ファイルを1つクリックすると下半分に開きます)**
+- 画像のプレビュー、画像の差し替え(元のファイルはゴミ箱へ)、動画(mp4 / webm)の再生
+- フィクスチャー(GDTF / grandMA3 XML)の中身の表示: DMXモード、色ホイール、GOBO(画像付き)、プリズム
+- DMXチャンネル表の編集(DMX Break / Coarse / Fine / Ultra / Default / Highlight / Lowlight / Snap)、GOBO画像の差し替え。**編集は「コピーとして保存」するまで反映されず、元のファイルは変更せず `… custom v1` という別ファイルとして保存します**
+- grandMA2 の `.pxml`(暗号化されています)から、GDTF Share で同じ機種のGDTFを検索し、ダウンロードしたGDTFをライブラリに追加
 
-| 機能 | macOS | Windows |
-|---|:---:|:---:|
-| ローカル onPC (grandMA3) | ✅ | ✅ |
-| ローカル onPC (grandMA2) | ❌ | ✅ |
-| USBメモリ (grandMA3 / grandMA2 自動検出) | ✅ | ✅ |
-| 実機コンソール接続 (SFTP) | ✅ ※未検証 | ✅ ※未検証 |
-| 他のMac/PC(onPC)へのSSH接続 | ✅ | ✅ |
-| ドラッグ&ドロップ インポート/エクスポート | ✅ | ✅ |
-| 別Source間のドラッグ移動 | ✅ (SFTP含む) | ✅ (SFTP含む) |
-| リネーム・削除 | ✅ | ✅ |
-| 複数選択・一括削除 | ✅ (選択モード切替) | ✅ (Ctrl/Shift+クリック) |
-| クイックオープン検索 | ✅ (⌘K) | ✅ (Ctrl+K) |
-| メーカー名フィルタ | ✅ | ✅ |
-| フォルダ種別アイコン(lib_*等) | ✅ | 未対応 |
-| MA Net(同一サブネット)判定表示 | ✅ | ✅ |
-
-※ 実機コンソールへのSFTP接続はどちらのプラットフォームも実装済みですが、実機での動作検証がまだできていません(上記Note参照)。ローカル onPC / USBメモリの利用はどちらのプラットフォームでも動作確認済みです。
+**その他**
+- **USBにバックアップ**: Sourceを右クリックして、`YYMMDD-MAbackup` フォルダにMAのファイルをそのままコピー(ライブラリ一式、またはショーファイルのみ。アプリ本体は含みません)。進捗表示つき
+- **MA3 onPCを起動**: 2.5以降のバージョンのSourceを右クリックして、対応するonPCアプリを起動
+- 日本語対応のメニューバー
 
 ## ダウンロードしてすぐ使う
 
-インストーラ不要、Xcode/Visual Studio不要です。[Releases](../../releases) から自分のOS用のファイルをダウンロードしてください。
+インストーラ不要、Xcode不要です。[Releases](../../releases) から `ResourceManagerForGrandMA-macOS.zip` をダウンロードしてください。
 
-### macOS
-
-1. `ResourceManagerForGrandMA-macOS.zip` をダウンロードして展開
+1. zipを展開
 2. `Resource Manager for grandMA.app` を `/Applications` に入れて起動
 
 未署名アプリのため、初回起動時にmacOSの警告でブロックされます。
@@ -56,18 +46,7 @@ grandMA3 / grandMA2 のファイルに素早くアクセスするための Mac /
 
 対応OS: macOS 14 (Sonoma) 以降。
 
-### Windows
-
-1. `ResourceManagerForGrandMA-win-x64.zip`(または `.exe`)をダウンロード
-2. 展開して `ResourceManagerForGrandMA.exe` をダブルクリック(.NETランタイムのインストール不要、単体で動作します)
-
-未署名アプリのため、初回起動時にWindows SmartScreenの警告が出ます。「詳細情報」→「実行」を選べば起動できます。
-
-対応OS: Windows 10/11 (64-bit)。
-
 ## ソースからビルドする
-
-### macOS
 
 ```bash
 brew install xcodegen
@@ -77,15 +56,6 @@ xcodegen generate
 ```
 
 `install.sh` が Release ビルドを `/Applications` にインストールします。
-
-### Windows
-
-```powershell
-cd Windows
-.\install.ps1
-```
-
-`.NET 8 SDK` が必要です(`dotnet` コマンドが使えること)。`install.ps1` が自己完結型の単体 `.exe` を `Windows\publish\` に生成します。
 
 ## ライセンス
 

@@ -5,3 +5,6 @@ build/
 publish/
 *.xcuserstate
 xcuserdata/
+
+# Windows port is kept local only (not published)
+Windows/

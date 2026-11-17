@@ -1,6 +1,0 @@
-bin/
-obj/
-publish/
-*.user
-.vs/
-.DS_Store
